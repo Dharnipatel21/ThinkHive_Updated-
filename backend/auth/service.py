@@ -1,0 +1,62 @@
+from fastapi import HTTPException, status
+from auth.models import LoginRequest, RegisterRequest, TokenResponse, UserRead
+from auth.repository import AuthRepository
+from core.enums import DocumentClassification, Role, ROLE_MAX_CLASSIFICATION
+from core.security import create_access_token, create_refresh_token, hash_password, verify_password
+from rbac.permissions import permissions_for_role
+
+
+class AuthService:
+    def __init__(self, repo: AuthRepository):
+        self.repo = repo
+
+    async def register(self, request: RegisterRequest) -> TokenResponse:
+        # Check slug not taken
+        existing_org = await self.repo.find_org_by_slug(request.organization_slug)
+        if existing_org:
+            raise HTTPException(status.HTTP_409_CONFLICT, "Organisation slug already taken")
+
+        # Create org
+        org_id = await self.repo.create_org({
+            "name": request.organization_name,
+            "slug": request.organization_slug,
+            "is_active": True,
+        })
+
+        # Create super admin user
+        role = Role.ORG_SUPER_ADMIN
+        perms = list(permissions_for_role(role))
+        user_id = await self.repo.create_user({
+            "org_id": org_id,
+            "email": request.email.lower(),
+            "full_name": request.full_name,
+            "hashed_password": hash_password(request.password),
+            "role": role.value,
+            "permissions": perms,
+            "is_active": True,
+        })
+
+        return self._make_tokens(org_id, user_id, role, perms)
+
+    async def login(self, request: LoginRequest) -> TokenResponse:
+        org = await self.repo.find_org_by_slug(request.organization_slug)
+        if not org:
+            raise HTTPException(status.HTTP_401_UNAUTHORIZED, "Organisation not found")
+
+        org_id = str(org["_id"])
+        user = await self.repo.find_user_by_email(org_id, request.email)
+        if not user or not verify_password(request.password, user["hashed_password"]):
+            raise HTTPException(status.HTTP_401_UNAUTHORIZED, "Invalid credentials")
+        if not user.get("is_active", True):
+            raise HTTPException(status.HTTP_403_FORBIDDEN, "Account disabled")
+
+        role = Role(user["role"])
+        perms = user.get("permissions", list(permissions_for_role(role)))
+        return self._make_tokens(org_id, str(user["_id"]), role, perms)
+
+    def _make_tokens(self, org_id, user_id, role, perms) -> TokenResponse:
+        payload = {"sub": user_id, "org_id": org_id, "role": role.value, "permissions": perms}
+        return TokenResponse(
+            access_token=create_access_token(payload),
+            refresh_token=create_refresh_token(payload),
+        )
