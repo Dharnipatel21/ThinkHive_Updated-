@@ -42,3 +42,17 @@ async def send_activation_email(to_email: str, full_name: str, org_slug: str, ot
     </div>
     """
     await send_email(to_email, subject, html)
+
+
+async def send_registration_otp_email(to_email: str, otp: str) -> None:
+    subject = "Verify your email — ThinkHive"
+    html = f"""
+    <div style="font-family: sans-serif; max-width: 480px; margin: auto;">
+      <h2>Verify your email</h2>
+      <p>Use the code below to verify your email and continue registering your company on ThinkHive.</p>
+      <div style="font-size: 28px; font-weight: bold; letter-spacing: 4px; background:#f4f4f4; padding: 16px; text-align:center; border-radius:8px;">{otp}</div>
+      <p>This code expires in 10 minutes.</p>
+      <p>If you didn't request this, you can safely ignore this email.</p>
+    </div>
+    """
+    await send_email(to_email, subject, html)

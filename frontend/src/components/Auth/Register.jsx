@@ -25,7 +25,7 @@ export default function Register() {
 
   async function handleStep1(data) {
     setLoading(true);
-    try { const r = await sendOTP(data.email); if (r.dev_otp) toast.success(`Dev OTP: ${r.dev_otp}`, { duration: 15000 }); setStepData(data); setStep(1); }
+    try { await sendOTP(data.email); setStepData(data); setStep(1); toast.success("OTP sent to your email"); }
     catch (e) { toast.error(e?.response?.data?.detail || "Failed to send OTP"); }
     setLoading(false);
   }
