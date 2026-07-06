@@ -1,0 +1,70 @@
+@import url('https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400..900;1,9..144,400..900&family=Manrope:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap');
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --background: #EFF7CF;
+  --foreground: #732C2C;
+  --card: #F7FBEA;
+  --card-foreground: #732C2C;
+  --primary: #ABA361;
+  --primary-foreground: #ffffff;
+  --secondary: #BAD9B5;
+  --secondary-foreground: #420C14;
+  --muted: #D8E6C9;
+  --muted-foreground: #8A6B6B;
+  --accent: #BAD9B5;
+  --accent-foreground: #420C14;
+  --destructive: #B23A3A;
+  --destructive-foreground: #ffffff;
+  --border: #D8E6C9;
+  --radius: 0.75rem;
+
+  /* sidebar / top bar */
+  --sidebar: #F7FBEA;
+  --sidebar-foreground: #732C2C;
+  --sidebar-border: #D8E6C9;
+  --sidebar-active: #ABA361;
+  --sidebar-active-foreground: #ffffff;
+}
+
+.dark {
+  --background: #1A0508;
+  --foreground: #E4D9C4;
+  --card: #2A0A10;
+  --card-foreground: #E4D9C4;
+  --primary: #C9A15B;
+  --primary-foreground: #1A0508;
+  --secondary: #420C14;
+  --secondary-foreground: #EFF7CF;
+  --muted: #3A1520;
+  --muted-foreground: #A98E8E;
+  --accent: #420C14;
+  --accent-foreground: #EFF7CF;
+  --destructive: #E06B6B;
+  --destructive-foreground: #1A0508;
+  --border: #5A2029;
+
+  --sidebar: #2A0A10;
+  --sidebar-foreground: #E4D9C4;
+  --sidebar-border: #5A2029;
+  --sidebar-active: #C9A15B;
+  --sidebar-active-foreground: #1A0508;
+}
+
+* {
+  transition: background-color 0.25s ease, border-color 0.25s ease, color 0.25s ease;
+}
+
+body {
+  background: var(--background);
+  color: var(--foreground);
+  font-family: 'Manrope', system-ui, sans-serif;
+}
+
+h1, h2, h3 {
+  font-family: 'Fraunces', Georgia, serif;
+  font-weight: 700;
+}
