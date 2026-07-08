@@ -14,6 +14,7 @@ import SearchPage from "./pages/SearchPage";
 import AdminPage from "./pages/AdminPage";
 import DomainsPage from "./pages/DomainsPage";
 import HRPage from "./pages/HRPage";
+import KnowledgeMapPage from "./pages/KnowledgeMapPage";
 
 export default function App() {
   const { fetchUser, token } = useAuthStore();
@@ -37,6 +38,7 @@ export default function App() {
           <Route path="/search" element={<SearchPage />} />
           <Route path="/domains" element={<DomainsPage />} />
           <Route path="/hr" element={<HRPage />} />
+          <Route path="/knowledge-map" element={<KnowledgeMapPage />} />
           <Route path="/admin" element={<AdminPage />} />
         </Route>
       </Route>

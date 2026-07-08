@@ -12,7 +12,7 @@ ROUTE_MODULES = (
     "api.routes.documents", "api.routes.query", "api.routes.search",
     "api.routes.summary", "api.routes.voice", "api.routes.admin",
     "api.routes.dashboard", "api.routes.document_tags",
-    "api.routes.domains", "api.routes.hr",
+    "api.routes.domains", "api.routes.hr", "api.routes.knowledge_map",
 )
 
 @asynccontextmanager

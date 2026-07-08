@@ -41,6 +41,10 @@ export const createUser = d => api.post("/admin/users", d).then(r => r.data);
 export const updateUser = (id, d) => api.put(`/admin/users/${id}`, d).then(r => r.data);
 export const deleteUser = id => api.delete(`/admin/users/${id}`).then(r => r.data);
 export const getAuditTrail = () => api.get("/admin/audit-trail").then(r => r.data);
+export const getKnowledgeMapDocuments = async () => {
+  const response = await api.get('/knowledge-map/documents');
+  return response.data;
+};
 
 export const activateAccount = d => api.post("/auth/activate", d).then(r => r.data);
 export const resendActivation = d => api.post("/auth/resend-activation", d).then(r => r.data);
