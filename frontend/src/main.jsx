@@ -9,7 +9,16 @@ ReactDOM.createRoot(document.getElementById("root")).render(
   <React.StrictMode>
     <BrowserRouter>
       <App />
-      <Toaster position="top-right" toastOptions={{ style: { background: "#131929", color: "#fff", border: "1px solid #1C2540" } }} />
+      <Toaster
+        position="top-right"
+        toastOptions={{
+          style: {
+            background: "var(--card)",
+            color: "var(--foreground)",
+            border: "1px solid var(--border)",
+          },
+        }}
+      />
     </BrowserRouter>
   </React.StrictMode>
 );

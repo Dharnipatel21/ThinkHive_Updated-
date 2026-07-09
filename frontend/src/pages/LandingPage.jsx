@@ -1,293 +1,148 @@
-/*import { Link } from "react-router-dom";
-import { Brain, FileSearch, Shield, Zap, Globe, BarChart3, ArrowRight, CheckCircle } from "lucide-react";
-
-const FEATURES = [
-  { icon: FileSearch, title: "Smart Document Q&A", desc: "Ask questions in plain language. Get cited answers from your own documents." },
-  { icon: Shield, title: "PII Sanitisation", desc: "Every document stripped of personal data before reaching any AI model." },
-  { icon: Brain, title: "AI Confidence Scoring", desc: "Every answer rated for reliability so you always know how much to trust it." },
-  { icon: Globe, title: "Multilingual Support", desc: "Ask in Tamil, Hindi, French or 100+ languages. Get answers in the same language." },
-  { icon: Zap, title: "Voice Query", desc: "Speak your question. Whisper transcribes it and the AI answers." },
-  { icon: BarChart3, title: "Audit Trail", desc: "Every query, every answer, every source — logged for compliance." },
-];
-
-const DOMAINS = [
-  { n:"HR", e:"👥", d:"Leave policies, onboarding, compliance" },
-  { n:"Finance", e:"💰", d:"Reports, vendor contracts, invoicing" },
-  { n:"IT", e:"💻", d:"Runbooks, incidents, code review" },
-  { n:"Manufacturing", e:"🏭", d:"Equipment manuals, safety alerts" },
-  { n:"Sales", e:"📈", d:"Battlecards, proposals, intel" },
-  { n:"Legal", e:"⚖️", d:"Contract review, regulatory compliance" },
-];
-
-export default function LandingPage() {
-  return (
-    <div className="min-h-screen bg-[#0B0F1A] text-white">
-      <nav className="fixed inset-x-0 top-0 z-50 border-b border-white/5 bg-[#0B0F1A]/80 backdrop-blur-xl">
-        <div className="mx-auto flex max-w-6xl items-center justify-between px-6 py-4">
-          <div className="flex items-center gap-2">
-            <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-[#4F8EF7]"><Brain size={16} className="text-white" /></div>
-            <span className="text-lg font-bold">Think<span className="text-[#4F8EF7]">Hive</span></span>
-          </div>
-          <div className="flex gap-3">
-            <Link to="/login" className="rounded-lg border border-white/20 px-4 py-2 text-sm text-white/80 hover:border-white/40 transition">Sign In</Link>
-            <Link to="/register" className="rounded-lg bg-[#4F8EF7] px-4 py-2 text-sm font-semibold text-white hover:bg-[#4F8EF7]/90 transition">Register Company</Link>
-          </div>
-        </div>
-      </nav>
-
-      <section className="relative flex min-h-screen flex-col items-center justify-center px-6 pt-20 text-center">
-        <div className="absolute inset-0 overflow-hidden pointer-events-none">
-          <div className="absolute left-1/4 top-1/4 h-96 w-96 rounded-full bg-[#4F8EF7]/8 blur-3xl" />
-          <div className="absolute right-1/4 bottom-1/3 h-64 w-64 rounded-full bg-[#2DD4A7]/8 blur-3xl" />
-        </div>
-        <div className="relative z-10 max-w-4xl">
-          <span className="mb-6 inline-flex items-center gap-2 rounded-full border border-[#4F8EF7]/30 bg-[#4F8EF7]/10 px-4 py-1.5 text-sm text-[#4F8EF7]">
-            <span className="h-1.5 w-1.5 rounded-full bg-[#4F8EF7] animate-pulse" /> Enterprise RAG Platform
-          </span>
-          <h1 className="mt-4 text-5xl font-bold leading-tight md:text-6xl">
-            Your Organisation Knows Everything.<br />
-            <span className="text-[#4F8EF7]">Your Employees Can Find Nothing.</span>
-          </h1>
-          <p className="mx-auto mt-6 max-w-2xl text-lg text-white/60">
-            ThinkHive converts your unstructured documents into a conversational, cited, and auditable knowledge base. Ask anything. Get answers from your own files. In any language.
-          </p>
-          <div className="mt-10 flex flex-col items-center gap-4 sm:flex-row sm:justify-center">
-            <Link to="/register" className="flex items-center gap-2 rounded-xl bg-[#4F8EF7] px-8 py-4 text-base font-semibold text-white hover:bg-[#4F8EF7]/90 transition">
-              Register Your Company <ArrowRight size={18} />
-            </Link>
-            <Link to="/login" className="rounded-xl border border-white/20 px-8 py-4 text-base text-white/80 hover:border-white/40 transition">Sign In</Link>
-          </div>
-          <div className="mt-8 flex items-center justify-center gap-6 text-sm text-white/40">
-            {["No credit card required","5-minute setup","Your data stays yours"].map(t=>(
-              <span key={t} className="flex items-center gap-1.5"><CheckCircle size={14} className="text-[#2DD4A7]"/>{t}</span>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      <section className="mx-auto max-w-6xl px-6 py-24">
-        <h2 className="text-center text-3xl font-bold mb-4">How It Works</h2>
-        <p className="text-center text-white/50 mb-16">Three steps from raw documents to intelligent answers</p>
-        <div className="grid gap-8 md:grid-cols-3">
-          {[{n:"01",t:"Upload Documents",d:"PDF, DOCX, TXT — digital or scanned. OCR handles scanned files.",c:"text-[#4F8EF7]"},{n:"02",t:"Sanitise & Index",d:"PII removed, chunked, embedded, stored in your private vector database.",c:"text-[#2DD4A7]"},{n:"03",t:"Ask & Get Cited Answers",d:"AI answers with source citations, confidence scores, and full audit trail.",c:"text-[#F7C84F]"}].map(({n,t,d,c})=>(
-            <div key={n} className="rounded-2xl border border-white/10 bg-[#131929] p-8">
-              <span className={`text-5xl font-bold ${c} opacity-30`}>{n}</span>
-              <h3 className="mt-4 text-lg font-semibold text-white">{t}</h3>
-              <p className="mt-2 text-sm text-white/50">{d}</p>
-            </div>
-          ))}
-        </div>
-      </section>
-
-      <section className="mx-auto max-w-6xl px-6 py-24">
-        <h2 className="text-center text-3xl font-bold mb-4">Everything You Need</h2>
-        <p className="text-center text-white/50 mb-16">Built for enterprise teams who take knowledge seriously</p>
-        <div className="grid gap-5 md:grid-cols-2 lg:grid-cols-3">
-          {FEATURES.map(({icon:Icon,title,desc})=>(
-            <div key={title} className="rounded-2xl border border-white/10 bg-[#131929] p-6 hover:border-[#4F8EF7]/30 transition">
-              <div className="mb-3 flex h-10 w-10 items-center justify-center rounded-xl bg-[#4F8EF7]/10"><Icon size={20} className="text-[#4F8EF7]"/></div>
-              <h3 className="mb-1.5 font-semibold text-white">{title}</h3>
-              <p className="text-sm text-white/50">{desc}</p>
-            </div>
-          ))}
-        </div>
-      </section>
-
-      <section className="mx-auto max-w-6xl px-6 py-24">
-        <h2 className="text-center text-3xl font-bold mb-4">Works For Every Department</h2>
-        <p className="text-center text-white/50 mb-16">Create separate knowledge domains for each team</p>
-        <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-          {DOMAINS.map(({n,e,d})=>(
-            <div key={n} className="rounded-xl border border-white/10 bg-[#131929] p-5 hover:border-[#4F8EF7]/30 transition">
-              <span className="text-2xl">{e}</span>
-              <h3 className="mt-2 font-semibold text-white">{n}</h3>
-              <p className="mt-1 text-sm text-white/50">{d}</p>
-            </div>
-          ))}
-        </div>
-      </section>
-
-      <section className="mx-auto max-w-3xl px-6 py-24 text-center">
-        <div className="rounded-3xl border border-[#4F8EF7]/20 bg-[#131929] p-12">
-          <h2 className="text-3xl font-bold text-white">Ready to unlock your organisation's knowledge?</h2>
-          <p className="mt-4 text-white/50">Register your company and get started in under 5 minutes.</p>
-          <Link to="/register" className="mt-8 inline-flex items-center gap-2 rounded-xl bg-[#4F8EF7] px-10 py-4 font-semibold text-white hover:bg-[#4F8EF7]/90 transition">
-            Get Started Free <ArrowRight size={18}/>
-          </Link>
-        </div>
-      </section>
-      <footer className="border-t border-white/5 py-8 text-center text-sm text-white/30">© {new Date().getFullYear()} ThinkHive. All rights reserved.</footer>
-    </div>
-  );
-}*/
 import { Link } from "react-router-dom";
-import { Brain, FileSearch, Shield, Zap, Globe, BarChart3, ArrowRight, CheckCircle } from "lucide-react";
+import { ArrowRight, Bot, Brain, Check, FileText, Globe2, Lock, Search, Shield, Users } from "lucide-react";
+import ThemeToggle from "../components/Layout/ThemeToggle";
 
-const FEATURES = [
-  { icon: FileSearch, title: "Smart Document Q&A", desc: "Ask questions in plain language. Get cited answers from your own documents." },
-  { icon: Shield, title: "PII Sanitisation", desc: "Every document stripped of personal data before reaching any AI model." },
-  { icon: Brain, title: "AI Confidence Scoring", desc: "Every answer rated for reliability so you always know how much to trust it." },
-  { icon: Globe, title: "Multilingual Support", desc: "Ask in Tamil, Hindi, French or 100+ languages. Get answers in the same language." },
-  { icon: Zap, title: "Voice Query", desc: "Speak your question. Whisper transcribes it and the AI answers." },
-  { icon: BarChart3, title: "Audit Trail", desc: "Every query, every answer, every source — logged for compliance." },
-];
-
-const DOMAINS = [
-  { n: "HR", e: "👥", d: "Leave policies, onboarding, compliance" },
-  { n: "Finance", e: "💰", d: "Reports, vendor contracts, invoicing" },
-  { n: "IT", e: "💻", d: "Runbooks, incidents, code review" },
-  { n: "Manufacturing", e: "🏭", d: "Equipment manuals, safety alerts" },
-  { n: "Sales", e: "📈", d: "Battlecards, proposals, intel" },
-  { n: "Legal", e: "⚖️", d: "Contract review, regulatory compliance" },
+const modules = [
+  [Bot, "AI Assistant", "Intelligent workflow automation and natural-language querying across all your data."],
+  [FileText, "Documents", "Unified document management with version control and granular role-based access."],
+  [Search, "Search", "Instant semantic search across people, files, domains, and activity logs."],
+  [Globe2, "Domains", "Full DNS and domain lifecycle visibility - renewals, DNS records, SSL status."],
+  [Users, "HR", "People directory, org charts, onboarding workflows, and compliance tracking."],
+  [Shield, "Admin", "Role-based access control, audit logs, and granular permission matrices."],
+  [Brain, "Knowledge Gap & Map", "Visualise team competencies, identify skill gaps, and build targeted learning paths."],
 ];
 
 export default function LandingPage() {
   return (
     <div className="min-h-screen bg-background text-foreground">
-      {/* NAV — floating glass pill, matches Figma nav */}
-      <nav className="fixed top-3 left-3 right-3 z-50">
-        <div className="mx-auto flex max-w-6xl items-center justify-between rounded-2xl border border-white/50 bg-white/55 px-5 py-2.5 shadow-[0_4px_24px_rgba(66,12,20,0.08)] backdrop-blur-2xl">
-          <div className="flex items-center gap-2">
-            <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-primary">
-              <Brain size={16} className="text-primary-foreground" />
+      <nav className="fixed inset-x-3 top-3 z-50 rounded-lg border border-border bg-card/90 px-6 py-3 shadow-sm backdrop-blur">
+        <div className="mx-auto flex max-w-7xl items-center justify-between">
+          <Link to="/" className="flex items-center gap-3">
+            <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-primary text-primary-foreground">
+              <Brain size={18} />
             </div>
-            <span className="font-display text-lg font-bold tracking-tight text-foreground">
-              Think<span className="text-primary">Hive</span>
-            </span>
+            <span className="font-display text-xl font-bold">ThinkHive</span>
+          </Link>
+          <div className="hidden items-center gap-8 text-sm font-semibold text-foreground/78 md:flex">
+            <a href="#features">Features</a>
+            <a href="#process">How it Works</a>
+            <a href="#pricing">Pricing</a>
+            <a href="#about">About Us</a>
           </div>
-          <div className="flex gap-3">
-            <Link
-              to="/login"
-              className="rounded-lg border border-border px-4 py-2 text-sm text-foreground/80 transition hover:border-foreground/40"
-            >
-              Sign In
-            </Link>
-            <Link
-              to="/register"
-              className="rounded-lg bg-primary px-4 py-2 text-sm font-semibold text-primary-foreground transition hover:opacity-90"
-            >
-              Register Company
+          <div className="flex items-center gap-3">
+            <ThemeToggle />
+            <Link to="/login" className="th-button">
+              Login
             </Link>
           </div>
         </div>
       </nav>
 
-      {/* HERO */}
-      <section className="relative flex min-h-screen flex-col items-center justify-center px-6 pt-20 text-center">
-        <div className="pointer-events-none absolute inset-0 overflow-hidden">
-          <div className="absolute left-1/4 top-1/4 h-96 w-96 rounded-full bg-primary/10 blur-3xl" />
-          <div className="absolute bottom-1/3 right-1/4 h-64 w-64 rounded-full bg-secondary/20 blur-3xl" />
-        </div>
-        <div className="relative z-10 max-w-4xl">
-          <span className="mb-6 inline-flex items-center gap-2 rounded-full border border-primary/30 bg-primary/10 px-4 py-1.5 text-sm text-primary">
-            <span className="h-1.5 w-1.5 animate-pulse rounded-full bg-primary" /> Enterprise RAG Platform
-          </span>
-          <h1 className="font-display mt-4 text-5xl leading-tight md:text-6xl">
-            Your Organisation Knows Everything.<br />
-            <span className="text-primary">Your Employees Can Find Nothing.</span>
+      <section className="th-panel-band grid min-h-screen items-center gap-12 px-6 pb-16 pt-28 lg:grid-cols-[1.4fr_1fr] lg:px-20">
+        <div className="max-w-3xl">
+          <span className="th-chip mb-12 text-primary">AI-Powered Administration</span>
+          <h1 className="th-type text-5xl font-bold leading-tight text-foreground md:text-6xl">
+            One platform to manage your HR.
           </h1>
-          <p className="mx-auto mt-6 max-w-2xl text-lg text-foreground/70">
-            ThinkHive converts your unstructured documents into a conversational, cited, and auditable
-            knowledge base. Ask anything. Get answers from your own files. In any language.
+          <p className="mt-8 max-w-2xl text-xl leading-8 text-foreground/72">
+            ThinkHive unifies HR, domains, documents, knowledge mapping, and AI-driven automation under one elegant platform.
           </p>
-          <div className="mt-10 flex flex-col items-center gap-4 sm:flex-row sm:justify-center">
-            <Link
-              to="/register"
-              className="flex items-center gap-2 rounded-xl bg-primary px-8 py-4 text-base font-semibold text-primary-foreground transition hover:opacity-90"
-            >
-              Register Your Company <ArrowRight size={18} />
+          <div className="mt-12 flex flex-col gap-4 sm:flex-row">
+            <Link to="/register" className="th-button px-8 py-4 text-lg">
+              Start free trial <ArrowRight size={18} />
             </Link>
-            <Link
-              to="/login"
-              className="rounded-xl border border-border px-8 py-4 text-base text-foreground/80 transition hover:border-foreground/40"
-            >
-              Sign In
+            <Link to="/login" className="th-button-secondary px-8 py-4 text-lg">
+              Watch demo <ArrowRight size={18} />
             </Link>
           </div>
-          <div className="mt-8 flex items-center justify-center gap-6 text-sm text-foreground/50">
-            {["No credit card required", "5-minute setup", "Your data stays yours"].map((t) => (
-              <span key={t} className="flex items-center gap-1.5">
-                <CheckCircle size={14} className="text-secondary-foreground/70" />
-                {t}
+          <div className="mt-12 flex items-center gap-4">
+            {["SC", "MR", "PP", "JO", "EV"].map((i, index) => (
+              <span key={i} className="flex h-9 w-9 items-center justify-center rounded-full bg-secondary text-xs font-bold text-secondary-foreground" style={{ marginLeft: index ? -22 : 0 }}>
+                {i}
               </span>
+            ))}
+            <span className="font-semibold">2,400+ <span className="font-normal text-muted-foreground">teams worldwide</span></span>
+          </div>
+        </div>
+
+        <div className="mx-auto w-full max-w-sm space-y-4">
+          <div className="th-card p-5">
+            <div className="mb-4 flex items-center justify-between">
+              <h2 className="font-bold">Platform Overview</h2>
+              <span className="h-2.5 w-2.5 rounded-full bg-secondary-foreground" />
+            </div>
+            <div className="grid grid-cols-2 gap-3">
+              {[
+                ["148", "Employees"],
+                ["32", "Domains"],
+                ["1.2k", "Documents"],
+                ["99.8%", "Uptime"],
+              ].map(([n, l]) => (
+                <div key={l} className="rounded-lg bg-muted/40 p-4">
+                  <p className="font-display text-2xl">{n}</p>
+                  <p className="text-xs text-muted-foreground">{l}</p>
+                </div>
+              ))}
+            </div>
+          </div>
+          <div className="th-card p-5">
+            <h2 className="mb-4 flex items-center gap-2 font-bold"><Brain size={16} className="text-primary" /> Knowledge Gap Alert</h2>
+            {[
+              ["Security", 35],
+              ["Go-to-Market", 28],
+            ].map(([label, pct]) => (
+              <div key={label} className="mb-3">
+                <div className="mb-1 flex justify-between text-sm"><span>{label}</span><span className="text-destructive">{pct}%</span></div>
+                <div className="h-2 rounded-full bg-muted"><div className="h-full rounded-full bg-destructive" style={{ width: `${pct}%` }} /></div>
+              </div>
             ))}
           </div>
         </div>
       </section>
 
-      {/* HOW IT WORKS */}
-      <section className="mx-auto max-w-6xl px-6 py-24">
-        <h2 className="font-display text-center text-3xl mb-4">How It Works</h2>
-        <p className="mb-16 text-center text-foreground/50">Three steps from raw documents to intelligent answers</p>
-        <div className="grid gap-8 md:grid-cols-3">
+      <section id="features" className="px-6 py-24 lg:px-20">
+        <p className="mb-5 font-mono text-sm uppercase tracking-[0.35em] text-primary">Everything you need</p>
+        <h2 className="font-display max-w-2xl text-5xl leading-tight">Seven modules. One command centre.</h2>
+        <div className="mt-16 grid gap-5 md:grid-cols-2 xl:grid-cols-3">
+          {modules.map(([Icon, title, desc]) => (
+            <div key={title} className="th-card p-8">
+              <div className="mb-7 flex h-12 w-12 items-center justify-center rounded-lg bg-primary/12 text-primary"><Icon size={22} /></div>
+              <h3 className="font-display text-2xl">{title}</h3>
+              <p className="mt-3 text-muted-foreground">{desc}</p>
+            </div>
+          ))}
+        </div>
+      </section>
+
+      <section id="process" className="border-t border-primary/55 bg-card/55 px-6 py-24 text-center lg:px-20">
+        <p className="font-mono text-sm uppercase tracking-[0.35em] text-primary">Simple process</p>
+        <h2 className="mt-5 font-display text-5xl">Up and running in minutes</h2>
+        <div className="mx-auto mt-16 grid max-w-7xl gap-8 text-left md:grid-cols-4">
           {[
-            { n: "01", t: "Upload Documents", d: "PDF, DOCX, TXT — digital or scanned. OCR handles scanned files." },
-            { n: "02", t: "Sanitise & Index", d: "PII removed, chunked, embedded, stored in your private vector database." },
-            { n: "03", t: "Ask & Get Cited Answers", d: "AI answers with source citations, confidence scores, and full audit trail." },
-          ].map(({ n, t, d }) => (
-            <div key={n} className="rounded-2xl border border-border bg-card p-8 shadow-sm">
-              <span className="text-5xl font-bold text-primary opacity-30">{n}</span>
-              <h3 className="font-display mt-4 text-lg">{t}</h3>
-              <p className="mt-2 text-sm text-foreground/60">{d}</p>
+            ["01", "Connect your workspace", "Link your existing tools with native integrations - no configuration headaches."],
+            ["02", "Configure your roles", "Set granular permissions for every team member with our visual role builder."],
+            ["03", "Invite your team", "Onboard users with automated welcome flows and instant role assignment."],
+            ["04", "Operate confidently", "Monitor, manage, and iterate with a real-time audit trail behind everything."],
+          ].map(([n, title, desc]) => (
+            <div key={n}>
+              <p className="font-mono text-6xl font-bold text-primary/30">{n}</p>
+              <h3 className="mt-4 font-display text-2xl">{title}</h3>
+              <p className="mt-3 text-muted-foreground">{desc}</p>
             </div>
           ))}
         </div>
       </section>
 
-      {/* FEATURES */}
-      <section className="mx-auto max-w-6xl px-6 py-24">
-        <h2 className="font-display text-center text-3xl mb-4">Everything You Need</h2>
-        <p className="mb-16 text-center text-foreground/50">Built for enterprise teams who take knowledge seriously</p>
-        <div className="grid gap-5 md:grid-cols-2 lg:grid-cols-3">
-          {FEATURES.map(({ icon: Icon, title, desc }) => (
-            <div
-              key={title}
-              className="rounded-2xl border border-border bg-card p-6 shadow-sm transition hover:border-primary/40"
-            >
-              <div className="mb-3 flex h-10 w-10 items-center justify-center rounded-xl bg-primary/10">
-                <Icon size={20} className="text-primary" />
-              </div>
-              <h3 className="mb-1.5 font-semibold">{title}</h3>
-              <p className="text-sm text-foreground/60">{desc}</p>
-            </div>
-          ))}
-        </div>
+      <section id="pricing" className="border-t border-primary bg-card px-6 py-24 text-center">
+        <h2 className="font-display text-5xl">Ready to take control?</h2>
+        <p className="mt-6 text-xl text-muted-foreground">Start free. No credit card required. Full platform access for 14 days.</p>
+        <Link to="/register" className="th-button mt-10 px-10 py-4 text-lg">Start free trial <ArrowRight size={18} /></Link>
       </section>
 
-      {/* DOMAINS */}
-      <section className="mx-auto max-w-6xl px-6 py-24">
-        <h2 className="font-display text-center text-3xl mb-4">Works For Every Department</h2>
-        <p className="mb-16 text-center text-foreground/50">Create separate knowledge domains for each team</p>
-        <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-          {DOMAINS.map(({ n, e, d }) => (
-            <div
-              key={n}
-              className="rounded-xl border border-border bg-card p-5 shadow-sm transition hover:border-primary/40"
-            >
-              <span className="text-2xl">{e}</span>
-              <h3 className="mt-2 font-semibold">{n}</h3>
-              <p className="mt-1 text-sm text-foreground/60">{d}</p>
-            </div>
-          ))}
-        </div>
-      </section>
-
-      {/* CTA */}
-      <section className="mx-auto max-w-3xl px-6 py-24 text-center">
-        <div className="rounded-3xl border border-primary/20 bg-card p-12 shadow-sm">
-          <h2 className="font-display text-3xl">Ready to unlock your organisation's knowledge?</h2>
-          <p className="mt-4 text-foreground/60">Register your company and get started in under 5 minutes.</p>
-          <Link
-            to="/register"
-            className="mt-8 inline-flex items-center gap-2 rounded-xl bg-primary px-10 py-4 font-semibold text-primary-foreground transition hover:opacity-90"
-          >
-            Get Started Free <ArrowRight size={18} />
-          </Link>
-        </div>
-      </section>
-
-      <footer className="border-t border-border py-8 text-center text-sm text-foreground/40">
-        © {new Date().getFullYear()} ThinkHive. All rights reserved.
+      <footer id="about" className="flex flex-col gap-4 border-t border-border px-6 py-8 text-sm text-muted-foreground md:flex-row md:items-center md:justify-between lg:px-20">
+        <span className="flex items-center gap-3 font-display text-lg font-bold text-foreground"><Brain size={17} /> ThinkHive</span>
+        <div className="flex gap-8"><span>Privacy</span><span>Terms</span><span>Security</span><span>Status</span><span>Docs</span></div>
+        <span>© 2026 ThinkHive, Inc.</span>
       </footer>
     </div>
   );

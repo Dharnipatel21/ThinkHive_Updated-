@@ -1,6 +1,7 @@
 import { useEffect } from "react";
 import { Navigate, Route, Routes } from "react-router-dom";
 import { useAuthStore } from "./store/useAuthStore";
+import { useThemeStore } from "./store/useThemeStore";
 import AppLayout from "./components/Layout/AppLayout";
 import ProtectedRoute from "./components/Layout/ProtectedRoute";
 import LandingPage from "./pages/LandingPage";
@@ -14,9 +15,15 @@ import SearchPage from "./pages/SearchPage";
 import AdminPage from "./pages/AdminPage";
 import DomainsPage from "./pages/DomainsPage";
 import HRPage from "./pages/HRPage";
+import KnowledgeMapPage from "./pages/KnowledgeMapPage";
 
 export default function App() {
   const { fetchUser, token } = useAuthStore();
+  const initTheme = useThemeStore(s => s.initTheme);
+
+  useEffect(() => {
+    initTheme();
+  }, []);
 
   useEffect(() => {
     if (token) fetchUser();
@@ -37,6 +44,7 @@ export default function App() {
           <Route path="/search" element={<SearchPage />} />
           <Route path="/domains" element={<DomainsPage />} />
           <Route path="/hr" element={<HRPage />} />
+          <Route path="/knowledge-map" element={<KnowledgeMapPage />} />
           <Route path="/admin" element={<AdminPage />} />
         </Route>
       </Route>

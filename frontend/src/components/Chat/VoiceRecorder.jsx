@@ -35,16 +35,19 @@ export default function VoiceRecorder({ onTranscript }) {
   function stop() { mediaRef.current?.stop(); setRecording(false); }
 
   if (loading) return (
-    <button disabled className="flex h-10 w-10 items-center justify-center rounded-full bg-[#1C2540]">
-      <Loader2 size={16} className="animate-spin text-[#4F8EF7]" />
+    <button disabled className="flex h-10 w-10 items-center justify-center rounded-full bg-muted">
+      <Loader2 size={16} className="animate-spin text-primary" />
     </button>
   );
   return (
-    <button onClick={recording ? stop : start}
-      className={`flex h-10 w-10 items-center justify-center rounded-full transition
-        ${recording ? "bg-red-500 animate-pulse" : "bg-[#1C2540] hover:bg-[#243060]"}`}
-      title={recording ? "Stop" : "Voice query"}>
-      {recording ? <MicOff size={16} className="text-white" /> : <Mic size={16} className="text-white/70" />}
+    <button
+      onClick={recording ? stop : start}
+      className={`flex h-10 w-10 items-center justify-center rounded-full transition ${
+        recording ? "bg-destructive animate-pulse" : "bg-muted hover:bg-muted/70"
+      }`}
+      title={recording ? "Stop" : "Voice query"}
+    >
+      {recording ? <MicOff size={16} className="text-destructive-foreground" /> : <Mic size={16} className="text-foreground/70" />}
     </button>
   );
 }

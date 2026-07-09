@@ -1,22 +1,37 @@
-import { Trash2, Users, FileText, FolderOpen } from "lucide-react";
+import { FileText, Globe2, Trash2, Users } from "lucide-react";
 import { useDomainStore } from "../../store/useDomainStore";
 
-const DOMAIN_EMOJI = { hr:"👥", finance:"💰", it:"💻", manufacturing:"🏭", legal:"⚖️", sales:"📈", marketing:"📣", operations:"⚙️", custom:"📁" };
-
-export default function DomainCard({ domain }) {
+export default function DomainCard({ domain, compact = false }) {
   const { remove } = useDomainStore();
+
+  if (compact) {
+    return (
+      <div className="grid grid-cols-[1fr_160px_140px_120px_40px] items-center border-b border-border px-5 py-4 last:border-b-0">
+        <p className="font-mono font-bold text-foreground">{domain.name}</p>
+        <p className="text-muted-foreground capitalize">{domain.domain_type}</p>
+        <span className="rounded-full bg-secondary/35 px-3 py-1 text-sm font-semibold text-secondary-foreground">active</span>
+        <p className="text-primary">Valid</p>
+        <button onClick={() => remove(domain.id)} className="rounded-lg p-2 text-muted-foreground hover:bg-destructive/10 hover:text-destructive">
+          <Trash2 size={15} />
+        </button>
+      </div>
+    );
+  }
+
   return (
-    <div className="group relative rounded-2xl border border-white/10 bg-[#131929] p-5 hover:border-[#4F8EF7]/30 transition">
+    <div className="group th-card relative p-5 transition hover:border-primary/45">
       <div className="flex items-start justify-between">
-        <span className="text-3xl">{DOMAIN_EMOJI[domain.domain_type] || "📁"}</span>
-        <button onClick={() => remove(domain.id)} className="opacity-0 group-hover:opacity-100 rounded-lg p-1.5 text-white/20 hover:bg-red-500/10 hover:text-red-400 transition">
+        <div className="flex h-12 w-12 items-center justify-center rounded-lg bg-primary/12 text-primary">
+          <Globe2 size={22} />
+        </div>
+        <button onClick={() => remove(domain.id)} className="rounded-lg p-1.5 text-muted-foreground opacity-0 transition hover:bg-destructive/10 hover:text-destructive group-hover:opacity-100">
           <Trash2 size={14} />
         </button>
       </div>
-      <h3 className="mt-3 text-base font-semibold text-white">{domain.name}</h3>
-      <p className="mt-0.5 text-xs text-white/40 capitalize">{domain.domain_type}</p>
-      {domain.description && <p className="mt-2 text-sm text-white/50 line-clamp-2">{domain.description}</p>}
-      <div className="mt-4 flex gap-4 text-xs text-white/30">
+      <h3 className="mt-5 text-base font-semibold text-foreground">{domain.name}</h3>
+      <p className="mt-0.5 text-xs capitalize text-muted-foreground">{domain.domain_type}</p>
+      {domain.description && <p className="mt-2 line-clamp-2 text-sm text-muted-foreground">{domain.description}</p>}
+      <div className="mt-4 flex gap-4 text-xs text-muted-foreground">
         <span className="flex items-center gap-1"><Users size={12} />{domain.member_count} members</span>
         <span className="flex items-center gap-1"><FileText size={12} />{domain.document_count} docs</span>
       </div>

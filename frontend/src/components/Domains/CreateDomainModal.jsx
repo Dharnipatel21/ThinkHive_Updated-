@@ -16,37 +16,32 @@ export default function CreateDomainModal({ onClose }) {
   }
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm px-4">
-      <div className="w-full max-w-md rounded-2xl border border-[#1C2540] bg-[#131929] p-6 shadow-2xl">
-        <div className="flex items-center justify-between mb-5">
-          <h2 className="text-lg font-semibold text-white">Create Domain</h2>
-          <button onClick={onClose} className="rounded-lg p-1.5 text-white/40 hover:bg-white/5 hover:text-white"><X size={16} /></button>
+    <div className="fixed inset-0 z-50 flex items-center justify-center bg-foreground/35 px-4 backdrop-blur-sm">
+      <div className="th-card w-full max-w-md p-6 shadow-2xl">
+        <div className="mb-5 flex items-center justify-between">
+          <h2 className="font-display text-xl text-foreground">Create Domain</h2>
+          <button onClick={onClose} className="rounded-lg p-1.5 text-muted-foreground hover:bg-muted hover:text-foreground"><X size={16} /></button>
         </div>
         <form onSubmit={handleSubmit} className="space-y-4">
           <div>
-            <label className="mb-1 block text-sm text-white/70">Domain Name</label>
-            <input value={form.name} onChange={e => setForm(p => ({ ...p, name: e.target.value }))} placeholder="e.g. Engineering Team"
-              className="w-full rounded-lg border border-[#1C2540] bg-[#0B0F1A] px-4 py-2.5 text-white placeholder:text-white/30 focus:border-[#4F8EF7] focus:outline-none" />
+            <label className="mb-1 block text-sm text-foreground/70">Domain Name</label>
+            <input value={form.name} onChange={(e) => setForm((p) => ({ ...p, name: e.target.value }))} placeholder="e.g. Engineering Team" className="th-input" />
           </div>
           <div>
-            <label className="mb-1 block text-sm text-white/70">Domain Type</label>
-            <select value={form.domain_type} onChange={e => setForm(p => ({ ...p, domain_type: e.target.value }))}
-              className="w-full rounded-lg border border-[#1C2540] bg-[#0B0F1A] px-4 py-2.5 text-white capitalize focus:border-[#4F8EF7] focus:outline-none">
-              {(domainTypes.length ? domainTypes : ["hr","finance","it","manufacturing","legal","sales","marketing","operations","custom"]).map(t => (
+            <label className="mb-1 block text-sm text-foreground/70">Domain Type</label>
+            <select value={form.domain_type} onChange={(e) => setForm((p) => ({ ...p, domain_type: e.target.value }))} className="th-input capitalize">
+              {(domainTypes.length ? domainTypes : ["hr","finance","it","manufacturing","legal","sales","marketing","operations","custom"]).map((t) => (
                 <option key={t} value={t}>{t}</option>
               ))}
             </select>
           </div>
           <div>
-            <label className="mb-1 block text-sm text-white/70">Description <span className="text-white/30">(optional)</span></label>
-            <textarea value={form.description} onChange={e => setForm(p => ({ ...p, description: e.target.value }))}
-              placeholder="What documents or knowledge does this domain cover?"
-              rows={2} className="w-full rounded-lg border border-[#1C2540] bg-[#0B0F1A] px-4 py-2.5 text-sm text-white placeholder:text-white/30 focus:border-[#4F8EF7] focus:outline-none resize-none" />
+            <label className="mb-1 block text-sm text-foreground/70">Description <span className="text-muted-foreground">(optional)</span></label>
+            <textarea value={form.description} onChange={(e) => setForm((p) => ({ ...p, description: e.target.value }))} placeholder="What documents or knowledge does this domain cover?" rows={3} className="th-input resize-none" />
           </div>
           <div className="flex gap-3 pt-1">
-            <button type="button" onClick={onClose} className="flex-1 rounded-lg border border-white/10 py-2.5 text-sm text-white/60 hover:bg-white/5">Cancel</button>
-            <button type="submit" disabled={loading || !form.name.trim()}
-              className="flex-1 rounded-lg bg-[#4F8EF7] py-2.5 text-sm font-semibold text-white hover:bg-[#4F8EF7]/90 disabled:opacity-50">
+            <button type="button" onClick={onClose} className="th-button-secondary flex-1">Cancel</button>
+            <button type="submit" disabled={loading || !form.name.trim()} className="th-button flex-1">
               {loading ? "Creating..." : "Create Domain"}
             </button>
           </div>

@@ -13,12 +13,6 @@ class Settings(BaseSettings):
         env_file_encoding="utf-8",
         extra="ignore",
     )
-    smtp_host: str = "smtp.gmail.com"
-    smtp_port: int = 587
-    smtp_user: str | None = None
-    smtp_password: SecretStr | None = None
-    smtp_from_email: str | None = None
-    smtp_from_name: str = "ThinkHive"
 
     app_name: str = "ThinkHive API"
     app_version: str = "1.0.0"
@@ -51,6 +45,13 @@ class Settings(BaseSettings):
 
     redis_url: str = "redis://localhost:6379/0"
     log_level: str = "INFO"
+
+    smtp_host: str = Field(default="smtp.gmail.com", validation_alias="SMTP_HOST")
+    smtp_port: int = Field(default=587, validation_alias="SMTP_PORT")
+    smtp_user: str | None = Field(default=None, validation_alias="SMTP_USER")
+    smtp_password: str | None = Field(default=None, validation_alias="SMTP_PASSWORD")
+    smtp_from_email: str | None = Field(default=None, validation_alias="SMTP_FROM_EMAIL")
+    smtp_from_name: str = Field(default="ThinkHive", validation_alias="SMTP_FROM_NAME")
 
     @property
     def cors_origins(self) -> list[str]:
