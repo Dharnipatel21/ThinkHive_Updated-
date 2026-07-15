@@ -1,145 +1,99 @@
-@import url('https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400..900;1,9..144,400..900&family=Manrope:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700;800&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap');
 
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
 :root {
-  --background: #F1F8D8;
-  --foreground: #732C2C;
-  --card: #F7FBEA;
-  --card-foreground: #732C2C;
-  --primary: #ABA361;
-  --primary-foreground: #2A0A10;
-  --secondary: #BAD9B5;
-  --secondary-foreground: #420C14;
-  --muted: #D8E6C9;
-  --muted-foreground: #8A6B6B;
-  --accent: #BAD9B5;
-  --accent-foreground: #420C14;
-  --destructive: #B23A3A;
-  --destructive-foreground: #FFF7DF;
-  --border: #D8E6C9;
-  --radius: 0.5rem;
+  /* Constant across light/dark, now variables (were hardcoded hex before)
+     so opacity modifiers like bg-gold/20 or text-danger/40 work */
+  --color-gold: #D4AF6A;
+  --color-gold-dark: #C9A15A;
+  --color-gold-light: #E4C88A;
+  --color-success: #4ADE80;
+  --color-danger: #E05252;
+  --color-warn: #E0A952;
 
-  /* sidebar / top bar */
-  --sidebar: #F7FBEA;
-  --sidebar-foreground: #732C2C;
-  --sidebar-border: #D8E6C9;
-  --sidebar-active: #ABA361;
-  --sidebar-active-foreground: #ffffff;
+  --color-primary: var(--color-gold);
+  --color-primary-foreground: var(--color-base-deep);
+  --color-accent: var(--color-gold-light);
+  --color-accent-foreground: var(--color-base-deep);
+  --color-destructive: var(--color-danger);
+  --color-destructive-foreground: var(--color-cream);
 }
 
-.dark {
-  --background: #21070B;
-  --foreground: #E4D9C4;
-  --card: #350A12;
-  --card-foreground: #E4D9C4;
-  --primary: #C9A15B;
-  --primary-foreground: #21070B;
-  --secondary: #420C14;
-  --secondary-foreground: #EFF7CF;
-  --muted: #3A1520;
-  --muted-foreground: #A98E8E;
-  --accent: #420C14;
-  --accent-foreground: #EFF7CF;
-  --destructive: #E06B6B;
-  --destructive-foreground: #FFF7DF;
-  --border: #5A2029;
+:root.dark {
+  --color-base: #2B0A0F;
+  --color-base-deep: #1A0508;
+  --color-surface: #3A1015;
+  --color-surface-hover: #451319;
+  --color-border: #4A1A1F;
+  --color-cream: #F5EFE0;
+  --color-rose-muted: #B99A97;
 
-  --sidebar: #350A12;
-  --sidebar-foreground: #E4D9C4;
-  --sidebar-border: #5A2029;
-  --sidebar-active: #C9A15B;
-  --sidebar-active-foreground: #1A0508;
+  /* No green in dark mode, per request — tied to base so any bg-sage/text-sage
+     usage blends invisibly into the surrounding maroon surface. */
+  --color-sage: var(--color-base);
+
+  --color-secondary: #451319;
+  --color-secondary-foreground: #F5EFE0;
+  --color-muted: #3A1015;
+  --color-muted-foreground: #B99A97;
+  --color-sidebar: #1A0508;
+  --color-sidebar-foreground: #F5EFE0;
+  --color-sidebar-border: #4A1A1F;
+  --color-sidebar-active: #D4AF6A;
+  --color-sidebar-active-foreground: #1A0508;
 }
+:root.light {
+  --color-base: #FBF7EC;
+  --color-base-deep: #FFFFFF;
+  --color-surface: #FFFFFF;
+  --color-surface-hover: #F0EAD8;
+  --color-border: #E3D9BE;
+  --color-cream: #3A1015;
+  --color-rose-muted: #8A6F63;
 
-* {
-  transition: background-color 0.25s ease, border-color 0.25s ease, color 0.25s ease;
-  box-sizing: border-box;
+  /* Sage green pulled from the logo's negative space — kept as an accent,
+     never a solid fill, so it stays secondary to gold. */
+  --color-sage: #8EB37D;
+
+  --color-secondary: #F0EAD8;
+  --color-secondary-foreground: #3A1015;
+  --color-muted: #FBF7EC;
+  --color-muted-foreground: #8A6F63;
+  --color-sidebar: #FFFFFF;
+  --color-sidebar-foreground: #3A1015;
+  --color-sidebar-border: #E3D9BE;
+  --color-sidebar-active: #D4AF6A;
+  --color-sidebar-active-foreground: #FFFFFF;
 }
 
 body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: 'Manrope', system-ui, sans-serif;
-  margin: 0;
-  min-width: 320px;
+  background: var(--color-base);
+  color: var(--color-cream);
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  transition: background-color 0.3s ease, color 0.3s ease;
 }
 
-h1, h2, h3 {
-  font-family: 'Fraunces', Georgia, serif;
-  font-weight: 700;
+h1, h2, h3, .font-display { font-family: 'Playfair Display', serif; }
+
+::-webkit-scrollbar { width: 4px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb { background: var(--color-border); border-radius: 4px; }
+
+.typewriter-caret::after {
+  content: '|';
+  animation: blink 0.9s step-end infinite;
+  margin-left: 2px;
+  color: var(--color-gold);
 }
+@keyframes blink { 0%, 100% { opacity: 1; } 50% { opacity: 0; } }
 
-button, input, textarea, select {
-  font: inherit;
-}
+.stagger-item { opacity: 0; animation: fadeInUp 0.5s ease-out forwards; }
+@keyframes fadeInUp { from { opacity: 0; transform: translateY(14px); } to { opacity: 1; transform: translateY(0); } }
 
-button {
-  cursor: pointer;
-}
-
-button:disabled {
-  cursor: not-allowed;
-}
-
-::selection {
-  background: color-mix(in srgb, var(--primary) 35%, transparent);
-}
-
-::-webkit-scrollbar {
-  width: 12px;
-  height: 12px;
-}
-
-::-webkit-scrollbar-track {
-  background: color-mix(in srgb, var(--background) 88%, var(--foreground));
-}
-
-::-webkit-scrollbar-thumb {
-  background: color-mix(in srgb, var(--foreground) 35%, var(--primary));
-  border: 3px solid color-mix(in srgb, var(--background) 88%, var(--foreground));
-  border-radius: 999px;
-}
-
-@layer components {
-  .th-page {
-    @apply mx-auto w-full max-w-7xl px-5 py-8 sm:px-8 lg:px-10;
-  }
-
-  .th-card {
-    @apply rounded-lg border border-border bg-card shadow-sm;
-  }
-
-  .th-button {
-    @apply inline-flex items-center justify-center gap-2 rounded-lg bg-primary px-4 py-2.5 text-sm font-semibold text-primary-foreground shadow-sm transition hover:opacity-90 disabled:opacity-55;
-  }
-
-  .th-button-secondary {
-    @apply inline-flex items-center justify-center gap-2 rounded-lg border border-border bg-card px-4 py-2.5 text-sm font-semibold text-foreground transition hover:border-primary/60 hover:bg-muted/40 disabled:opacity-55;
-  }
-
-  .th-input {
-    @apply w-full rounded-lg border border-border bg-card px-4 py-3 text-foreground outline-none placeholder:text-muted-foreground focus:border-primary;
-  }
-
-  .th-chip {
-    @apply inline-flex items-center gap-2 rounded-full border border-border bg-muted/45 px-3 py-1 text-xs font-medium text-foreground/80;
-  }
-
-  .th-panel-band {
-    background:
-      linear-gradient(90deg, color-mix(in srgb, var(--background) 92%, var(--foreground)) 0 60%, color-mix(in srgb, var(--secondary) 36%, var(--background)) 60% 100%);
-  }
-
-  .dark .th-panel-band {
-    background:
-      linear-gradient(90deg, #21070B 0 60%, #5A151D 60% 100%);
-  }
-
-  .th-type {
-    font-family: 'JetBrains Mono', monospace;
-    letter-spacing: 0;
-  }
-}
+.progress-fill { width: 0%; animation: progressFill 1.2s cubic-bezier(0.16, 1, 0.3, 1) forwards; }
+@keyframes progressFill { to { width: var(--fill-width); } }

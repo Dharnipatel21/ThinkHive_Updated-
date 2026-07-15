@@ -1,149 +1,261 @@
+import { useState } from "react";
 import { Link } from "react-router-dom";
-import { ArrowRight, Bot, Brain, Check, FileText, Globe2, Lock, Search, Shield, Users } from "lucide-react";
-import ThemeToggle from "../components/Layout/ThemeToggle";
+import { Brain, FileSearch, Shield, Zap, Globe, BarChart3, ArrowRight, CheckCircle, Moon, Sun, Users, FolderOpen, FileText, Gauge, Menu, X } from "lucide-react";
+import Typewriter from "../components/common/Typewriter";
+import { useTheme } from "../context/ThemeContext";
+import logoLight from "../assets/logo-light.png";
+import logoDark from "../assets/logo-dark.png";
 
-const modules = [
-  [Bot, "AI Assistant", "Intelligent workflow automation and natural-language querying across all your data."],
-  [FileText, "Documents", "Unified document management with version control and granular role-based access."],
-  [Search, "Search", "Instant semantic search across people, files, domains, and activity logs."],
-  [Globe2, "Domains", "Full DNS and domain lifecycle visibility - renewals, DNS records, SSL status."],
-  [Users, "HR", "People directory, org charts, onboarding workflows, and compliance tracking."],
-  [Shield, "Admin", "Role-based access control, audit logs, and granular permission matrices."],
-  [Brain, "Knowledge Gap & Map", "Visualise team competencies, identify skill gaps, and build targeted learning paths."],
+const FEATURES = [
+  { icon: FileSearch, title: "Smart Document Q&A", desc: "Ask questions in plain language. Get cited answers from your own documents." },
+  { icon: Shield, title: "PII Sanitisation", desc: "Every document stripped of personal data before reaching any AI model." },
+  { icon: Brain, title: "AI Confidence Scoring", desc: "Every answer rated for reliability so you always know how much to trust it." },
+  { icon: Globe, title: "Multilingual Support", desc: "Ask in Tamil, Hindi, French or 100+ languages. Get answers in the same language." },
+  { icon: Zap, title: "Voice Query", desc: "Speak your question. Whisper transcribes it and the AI answers." },
+  { icon: BarChart3, title: "Audit Trail", desc: "Every query, every answer, every source — logged for compliance." },
 ];
 
+const DOMAINS = [
+  { n: "HR", e: "👥", d: "Leave policies, onboarding, compliance" },
+  { n: "Finance", e: "💰", d: "Reports, vendor contracts, invoicing" },
+  { n: "IT", e: "💻", d: "Runbooks, incidents, code review" },
+  { n: "Manufacturing", e: "🏭", d: "Equipment manuals, safety alerts" },
+  { n: "Sales", e: "📈", d: "Battlecards, proposals, intel" },
+  { n: "Legal", e: "⚖️", d: "Contract review, regulatory compliance" },
+];
+
+const STEPS = [
+  { n: "01", t: "Connect your workspace", d: "Link your existing tools with native integrations — no configuration headaches." },
+  { n: "02", t: "Configure your roles", d: "Set granular permissions for every team member with our visual role builder." },
+  { n: "03", t: "Invite your team", d: "Onboard users with automated welcome flows and instant role assignment." },
+  { n: "04", t: "Operate confidently", d: "Monitor, manage, and iterate with a real-time audit trail behind everything." },
+];
+
+// Illustrative only — not pulled from live data, since this panel renders
+// on the public landing page before any login/auth exists.
+const SAMPLE_STATS = [
+  { icon: Users, label: "Employees", value: "148" },
+  { icon: FolderOpen, label: "Domains", value: "32" },
+  { icon: FileText, label: "Documents", value: "1.2k" },
+  { icon: Gauge, label: "Uptime", value: "99.8%" },
+];
+
+const SAMPLE_GAPS = [
+  { label: "Security", pct: 35 },
+  { label: "Go-to-Market", pct: 28 },
+];
+
+const TAGLINE = "From scattered documents to cited, confidential, conversational intelligence.";
+
 export default function LandingPage() {
+  const { isDark, toggleTheme } = useTheme();
+  const [isMenuOpen, setIsMenuOpen] = useState(false);
+
+  const closeMenu = () => setIsMenuOpen(false);
+
   return (
-    <div className="min-h-screen bg-background text-foreground">
-      <nav className="fixed inset-x-3 top-3 z-50 rounded-lg border border-border bg-card/90 px-6 py-3 shadow-sm backdrop-blur">
-        <div className="mx-auto flex max-w-7xl items-center justify-between">
-          <Link to="/" className="flex items-center gap-3">
-            <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-primary text-primary-foreground">
-              <Brain size={18} />
+    <div className="min-h-screen bg-base text-cream">
+      <nav className="fixed inset-x-0 top-0 z-50 border-b border-border bg-base-deep/90 backdrop-blur-xl">
+        <div className="mx-auto flex max-w-6xl items-center justify-between px-4 py-3 sm:px-6 sm:py-4">
+          <div className="flex items-center gap-2">
+            <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-gold/15 p-1">
+              <img
+                src={isDark ? logoDark : logoLight}
+                alt="ThinkHive"
+                className="h-full w-full object-contain"
+              />
             </div>
-            <span className="font-display text-xl font-bold">ThinkHive</span>
-          </Link>
-          <div className="hidden items-center gap-8 text-sm font-semibold text-foreground/78 md:flex">
-            <a href="#features">Features</a>
-            <a href="#process">How it Works</a>
-            <a href="#pricing">Pricing</a>
-            <a href="#about">About Us</a>
+            <span className="font-display text-lg font-bold text-cream">ThinkHive</span>
           </div>
-          <div className="flex items-center gap-3">
-            <ThemeToggle />
-            <Link to="/login" className="th-button">
-              Login
+
+          <div className="hidden items-center gap-8 text-sm text-rose-muted md:flex">
+            <a href="#features" className="hover:text-cream transition-colors">Features</a>
+            <a href="#how-it-works" className="hover:text-cream transition-colors">How it Works</a>
+            <Link to="/about" className="hover:text-cream transition-colors">About Us</Link>
+          </div>
+
+          <div className="flex items-center gap-2 sm:gap-4">
+            <button
+              onClick={toggleTheme}
+              className="flex h-6 w-11 items-center rounded-full bg-surface-hover px-0.5 transition-colors"
+            >
+              <div className={`flex h-5 w-5 items-center justify-center rounded-full bg-gold transition-transform ${isDark ? "translate-x-0" : "translate-x-5"}`}>
+                {isDark ? <Moon size={11} className="text-base-deep" /> : <Sun size={11} className="text-base-deep" />}
+              </div>
+            </button>
+            <Link to="/login" className="hidden items-center gap-2 rounded-full bg-gold px-5 py-2 text-sm font-semibold text-base-deep transition-colors hover:bg-gold-light sm:flex">
+              <ArrowRight size={14} className="rotate-180" /> Login
+            </Link>
+            <button
+              type="button"
+              aria-label={isMenuOpen ? "Close navigation menu" : "Open navigation menu"}
+              aria-expanded={isMenuOpen}
+              onClick={() => setIsMenuOpen((open) => !open)}
+              className="flex h-9 w-9 items-center justify-center rounded-lg border border-border text-cream transition-colors hover:border-gold/40 hover:text-gold md:hidden"
+            >
+              {isMenuOpen ? <X size={20} /> : <Menu size={20} />}
+            </button>
+          </div>
+        </div>
+        <div className={`overflow-hidden border-t border-border transition-all duration-300 md:hidden ${isMenuOpen ? "max-h-64 opacity-100" : "max-h-0 opacity-0"}`}>
+          <div className="mx-auto flex max-w-6xl flex-col gap-1 px-4 py-3 sm:px-6">
+            <a href="#features" onClick={closeMenu} className="rounded-lg px-3 py-2.5 text-sm text-rose-muted transition-colors hover:bg-surface hover:text-cream">Features</a>
+            <a href="#how-it-works" onClick={closeMenu} className="rounded-lg px-3 py-2.5 text-sm text-rose-muted transition-colors hover:bg-surface hover:text-cream">How it Works</a>
+            <Link to="/about" onClick={closeMenu} className="rounded-lg px-3 py-2.5 text-sm text-rose-muted transition-colors hover:bg-surface hover:text-cream">About Us</Link>
+            <Link to="/login" onClick={closeMenu} className="mt-2 flex items-center justify-center gap-2 rounded-lg bg-gold px-4 py-2.5 text-sm font-semibold text-base-deep transition-colors hover:bg-gold-light">
+              <ArrowRight size={14} className="rotate-180" /> Login
             </Link>
           </div>
         </div>
       </nav>
 
-      <section className="th-panel-band grid min-h-screen items-center gap-12 px-6 pb-16 pt-28 lg:grid-cols-[1.4fr_1fr] lg:px-20">
-        <div className="max-w-3xl">
-          <span className="th-chip mb-12 text-primary">AI-Powered Administration</span>
-          <h1 className="th-type text-5xl font-bold leading-tight text-foreground md:text-6xl">
-            One platform to manage your HR.
-          </h1>
-          <p className="mt-8 max-w-2xl text-xl leading-8 text-foreground/72">
-            ThinkHive unifies HR, domains, documents, knowledge mapping, and AI-driven automation under one elegant platform.
-          </p>
-          <div className="mt-12 flex flex-col gap-4 sm:flex-row">
-            <Link to="/register" className="th-button px-8 py-4 text-lg">
-              Start free trial <ArrowRight size={18} />
-            </Link>
-            <Link to="/login" className="th-button-secondary px-8 py-4 text-lg">
-              Watch demo <ArrowRight size={18} />
-            </Link>
-          </div>
-          <div className="mt-12 flex items-center gap-4">
-            {["SC", "MR", "PP", "JO", "EV"].map((i, index) => (
-              <span key={i} className="flex h-9 w-9 items-center justify-center rounded-full bg-secondary text-xs font-bold text-secondary-foreground" style={{ marginLeft: index ? -22 : 0 }}>
-                {i}
-              </span>
-            ))}
-            <span className="font-semibold">2,400+ <span className="font-normal text-muted-foreground">teams worldwide</span></span>
-          </div>
+      {/* Hero */}
+      <section className="relative flex min-h-screen items-center px-4 pb-12 pt-24 sm:px-6 sm:pt-28 lg:pb-0">
+        <div className="absolute inset-0 overflow-hidden pointer-events-none">
+          <div className="absolute left-1/4 top-1/4 h-96 w-96 rounded-full bg-gold/8 blur-3xl" />
+          <div className="absolute right-1/4 bottom-1/3 h-64 w-64 rounded-full bg-gold/5 blur-3xl" />
+          {/* Ambient sage glow behind the illustrative panel — echoes the
+              logo's green negative space. Light mode only; see index.css. */}
+          <div className="absolute right-[10%] top-[8%] h-[38rem] w-[34rem] rounded-[3rem] bg-sage/25 blur-[80px]" />
         </div>
 
-        <div className="mx-auto w-full max-w-sm space-y-4">
-          <div className="th-card p-5">
-            <div className="mb-4 flex items-center justify-between">
-              <h2 className="font-bold">Platform Overview</h2>
-              <span className="h-2.5 w-2.5 rounded-full bg-secondary-foreground" />
+        <div className="relative z-10 mx-auto grid max-w-6xl grid-cols-1 items-center gap-10 sm:gap-12 lg:grid-cols-2">
+          {/* Left: copy */}
+          <div className="text-center lg:text-left">
+            <span className="mb-5 inline-flex items-center gap-2 rounded-full border border-gold/30 bg-gold/10 px-3 py-1.5 text-[10px] font-mono uppercase tracking-[0.15em] text-gold sm:mb-6 sm:px-4 sm:text-xs sm:tracking-widest">
+              AI-Powered Administration
+            </span>
+            <h1 className="mt-4 min-h-[3.6em] font-display text-3xl font-bold leading-tight text-cream sm:min-h-[2.8em] sm:text-4xl md:min-h-[2.4em] md:text-5xl lg:text-6xl">
+              From Document Chaos to Enterprise Intelligence
+              <br />
+              <span className="text-gold"></span>
+            </h1>
+            <p className="mx-auto mt-5 min-h-[4.5em] max-w-xl text-base text-rose-muted sm:mt-6 sm:min-h-[3.5em] sm:text-lg lg:mx-0">
+              <Typewriter text={TAGLINE} speed={35} />
+            </p>
+            <div className="mt-8 flex flex-col items-stretch gap-3 sm:mt-10 sm:flex-row sm:items-center sm:justify-center sm:gap-4 lg:justify-start">
+              <Link to="/register" className="flex items-center justify-center gap-2 rounded-xl bg-gold px-6 py-3 text-sm font-semibold text-base-deep transition-colors hover:bg-gold-light sm:px-8 sm:py-4 sm:text-base">
+                Start free trial <ArrowRight size={18} />
+              </Link>
+              <Link to="/login" className="rounded-xl border border-border px-6 py-3 text-center text-sm text-cream transition-colors hover:border-gold/40 sm:px-8 sm:py-4 sm:text-base bg-gold">
+                Watch demo
+              </Link>
             </div>
-            <div className="grid grid-cols-2 gap-3">
-              {[
-                ["148", "Employees"],
-                ["32", "Domains"],
-                ["1.2k", "Documents"],
-                ["99.8%", "Uptime"],
-              ].map(([n, l]) => (
-                <div key={l} className="rounded-lg bg-muted/40 p-4">
-                  <p className="font-display text-2xl">{n}</p>
-                  <p className="text-xs text-muted-foreground">{l}</p>
-                </div>
+            <div className="mt-7 flex flex-col items-center gap-3 text-xs text-rose-muted sm:mt-8 sm:flex-row sm:flex-wrap sm:gap-6 sm:text-sm lg:justify-start">
+              {["No credit card required", "5-minute setup", "Your data stays yours"].map(t => (
+                <span key={t} className="flex items-center gap-1.5">
+                  <CheckCircle size={14} className="text-success" />{t}
+                </span>
               ))}
             </div>
           </div>
-          <div className="th-card p-5">
-            <h2 className="mb-4 flex items-center gap-2 font-bold"><Brain size={16} className="text-primary" /> Knowledge Gap Alert</h2>
-            {[
-              ["Security", 35],
-              ["Go-to-Market", 28],
-            ].map(([label, pct]) => (
-              <div key={label} className="mb-3">
-                <div className="mb-1 flex justify-between text-sm"><span>{label}</span><span className="text-destructive">{pct}%</span></div>
-                <div className="h-2 rounded-full bg-muted"><div className="h-full rounded-full bg-destructive" style={{ width: `${pct}%` }} /></div>
+
+          {/* Right: illustrative panel — floats over a soft ambient sage
+              wash (see the blurred shape above), rather than a boxed panel. */}
+          <div className="space-y-4 sm:space-y-5">
+            <div className="rounded-2xl border border-border bg-surface p-4 sm:p-6">
+              <div className="mb-4 flex items-start justify-between gap-3 sm:mb-5 sm:items-center">
+                <h3 className="font-display text-base font-semibold text-cream sm:text-lg">Platform Overview</h3>
+                <span className="rounded-full bg-gold/10 px-2.5 py-1 text-[10px] font-mono uppercase tracking-wider text-gold">Sample data</span>
               </div>
-            ))}
+              <div className="grid grid-cols-1 gap-3 sm:grid-cols-2 sm:gap-4">
+                {SAMPLE_STATS.map(({ icon: Icon, label, value }) => (
+                  <div key={label} className="rounded-xl bg-base-deep/40 p-3 sm:p-4">
+                    <Icon size={16} className="mb-2 text-gold/70" />
+                    <p className="font-display text-xl font-bold text-cream sm:text-2xl">{value}</p>
+                    <p className="text-xs text-rose-muted">{label}</p>
+                  </div>
+                ))}
+              </div>
+            </div>
+
+            <div className="rounded-2xl border border-border bg-surface p-4 sm:p-6">
+              <div className="mb-4 flex items-start justify-between gap-3 sm:mb-5 sm:items-center">
+                <h3 className="font-display text-base font-semibold text-cream sm:text-lg">Knowledge Gap Alert</h3>
+                <span className="rounded-full bg-gold/10 px-2.5 py-1 text-[10px] font-mono uppercase tracking-wider text-gold">Sample data</span>
+              </div>
+              <div className="space-y-4">
+                {SAMPLE_GAPS.map(({ label, pct }) => (
+                  <div key={label}>
+                    <div className="mb-1.5 flex justify-between text-sm">
+                      <span className="text-cream">{label}</span>
+                      <span className="text-danger">{pct}%</span>
+                    </div>
+                    <div className="h-1.5 w-full overflow-hidden rounded-full bg-base-deep/50">
+                      <div className="h-full rounded-full bg-danger" style={{ width: `${pct}%` }} />
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
           </div>
         </div>
       </section>
 
-      <section id="features" className="px-6 py-24 lg:px-20">
-        <p className="mb-5 font-mono text-sm uppercase tracking-[0.35em] text-primary">Everything you need</p>
-        <h2 className="font-display max-w-2xl text-5xl leading-tight">Seven modules. One command centre.</h2>
-        <div className="mt-16 grid gap-5 md:grid-cols-2 xl:grid-cols-3">
-          {modules.map(([Icon, title, desc]) => (
-            <div key={title} className="th-card p-8">
-              <div className="mb-7 flex h-12 w-12 items-center justify-center rounded-lg bg-primary/12 text-primary"><Icon size={22} /></div>
-              <h3 className="font-display text-2xl">{title}</h3>
-              <p className="mt-3 text-muted-foreground">{desc}</p>
+      {/* Feature cards */}
+      <section id="features" className="mx-auto max-w-6xl px-4 py-16 sm:px-6 sm:py-20 lg:py-24">
+        <p className="mb-3 text-center font-mono text-[10px] uppercase tracking-[0.15em] text-gold sm:text-xs sm:tracking-widest">Everything You Need</p>
+        <h2 className="mb-4 text-center font-display text-2xl font-bold text-cream sm:text-3xl">Seven modules. One command centre.</h2>
+        <p className="mb-10 text-center text-sm text-rose-muted sm:mb-16 sm:text-base">Built for enterprise teams who take knowledge seriously</p>
+        <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 sm:gap-5 lg:grid-cols-3">
+          {FEATURES.map(({ icon: Icon, title, desc }, i) => (
+            <div
+              key={title}
+              className="stagger-item rounded-2xl border border-border bg-surface p-5 transition-colors hover:border-gold/30 sm:p-6 lg:p-8"
+              style={{ animationDelay: `${i * 90}ms` }}
+            >
+              <div className="mb-4 flex h-12 w-12 items-center justify-center rounded-full bg-gold/15">
+                <Icon size={22} className="text-gold" />
+              </div>
+              <h3 className="mb-1.5 font-display text-lg font-semibold text-cream">{title}</h3>
+              <p className="text-sm text-rose-muted">{desc}</p>
             </div>
           ))}
         </div>
       </section>
 
-      <section id="process" className="border-t border-primary/55 bg-card/55 px-6 py-24 text-center lg:px-20">
-        <p className="font-mono text-sm uppercase tracking-[0.35em] text-primary">Simple process</p>
-        <h2 className="mt-5 font-display text-5xl">Up and running in minutes</h2>
-        <div className="mx-auto mt-16 grid max-w-7xl gap-8 text-left md:grid-cols-4">
-          {[
-            ["01", "Connect your workspace", "Link your existing tools with native integrations - no configuration headaches."],
-            ["02", "Configure your roles", "Set granular permissions for every team member with our visual role builder."],
-            ["03", "Invite your team", "Onboard users with automated welcome flows and instant role assignment."],
-            ["04", "Operate confidently", "Monitor, manage, and iterate with a real-time audit trail behind everything."],
-          ].map(([n, title, desc]) => (
-            <div key={n}>
-              <p className="font-mono text-6xl font-bold text-primary/30">{n}</p>
-              <h3 className="mt-4 font-display text-2xl">{title}</h3>
-              <p className="mt-3 text-muted-foreground">{desc}</p>
+      {/* How it works — numbered steps */}
+      <section id="how-it-works" className="mx-auto max-w-6xl px-4 py-16 sm:px-6 sm:py-20 lg:py-24">
+        <p className="mb-3 text-center font-mono text-[10px] uppercase tracking-[0.15em] text-gold sm:text-xs sm:tracking-widest">Simple Process</p>
+        <h2 className="mb-10 text-center font-display text-2xl font-bold text-cream sm:mb-16 sm:text-3xl">Up and running in minutes</h2>
+        <div className="grid grid-cols-1 gap-8 sm:grid-cols-2 lg:grid-cols-4">
+          {STEPS.map(({ n, t, d }, i) => (
+            <div key={n} className="stagger-item" style={{ animationDelay: `${i * 100}ms` }}>
+              <span className="font-display text-3xl font-bold text-danger/40 sm:text-4xl">{n}</span>
+              <h3 className="mt-3 font-display text-base font-semibold text-cream sm:mt-4 sm:text-lg">{t}</h3>
+              <p className="mt-2 text-sm text-rose-muted">{d}</p>
             </div>
           ))}
         </div>
       </section>
 
-      <section id="pricing" className="border-t border-primary bg-card px-6 py-24 text-center">
-        <h2 className="font-display text-5xl">Ready to take control?</h2>
-        <p className="mt-6 text-xl text-muted-foreground">Start free. No credit card required. Full platform access for 14 days.</p>
-        <Link to="/register" className="th-button mt-10 px-10 py-4 text-lg">Start free trial <ArrowRight size={18} /></Link>
+      {/* Domains */}
+      <section className="mx-auto max-w-6xl px-4 py-16 sm:px-6 sm:py-20 lg:py-24">
+        <p className="mb-3 text-center font-mono text-[10px] uppercase tracking-[0.15em] text-gold sm:text-xs sm:tracking-widest">Every Department</p>
+        <h2 className="mb-10 text-center font-display text-2xl font-bold text-cream sm:mb-16 sm:text-3xl">Works for every team</h2>
+        <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
+          {DOMAINS.map(({ n, e, d }, i) => (
+            <div
+              key={n}
+              className="stagger-item rounded-xl border border-border bg-surface p-4 transition-colors hover:border-gold/30 sm:p-5"
+              style={{ animationDelay: `${i * 80}ms` }}
+            >
+              <span className="text-2xl">{e}</span>
+              <h3 className="mt-2 font-display font-semibold text-cream">{n}</h3>
+              <p className="mt-1 text-sm text-rose-muted">{d}</p>
+            </div>
+          ))}
+        </div>
       </section>
 
-      <footer id="about" className="flex flex-col gap-4 border-t border-border px-6 py-8 text-sm text-muted-foreground md:flex-row md:items-center md:justify-between lg:px-20">
-        <span className="flex items-center gap-3 font-display text-lg font-bold text-foreground"><Brain size={17} /> ThinkHive</span>
-        <div className="flex gap-8"><span>Privacy</span><span>Terms</span><span>Security</span><span>Status</span><span>Docs</span></div>
-        <span>© 2026 ThinkHive, Inc.</span>
-      </footer>
+      {/* Final CTA */}
+      <section className="border-t border-border bg-base-deep px-4 py-16 text-center sm:px-6 sm:py-20 lg:py-24">
+        <h2 className="font-display text-3xl font-bold text-cream sm:text-4xl md:text-5xl">Ready to take control?</h2>
+        <p className="mx-auto mt-4 max-w-xl text-sm text-rose-muted sm:text-base">Start free. No credit card required. Full platform access for 14 days.</p>
+        <Link to="/register" className="mt-8 inline-flex items-center gap-2 rounded-xl bg-gold px-7 py-3 text-sm font-semibold text-base-deep transition-colors hover:bg-gold-light sm:px-10 sm:py-4 sm:text-base">
+          Start free trial <ArrowRight size={18} />
+        </Link>
+      </section>
     </div>
   );
 }

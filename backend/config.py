@@ -4,8 +4,7 @@ from pydantic import SecretStr, Field, field_validator
 from pydantic_settings import BaseSettings, SettingsConfigDict
 
 BASE_DIR = Path(__file__).resolve().parent          # .../ThinkHive/backend
-ENV_PATH = BASE_DIR.parent / ".env"                  # .../ThinkHive/.env
-
+ENV_PATH = BASE_DIR / ".env"                         # .../ThinkHive/backend/.env
 
 class Settings(BaseSettings):
     model_config = SettingsConfigDict(
@@ -13,6 +12,12 @@ class Settings(BaseSettings):
         env_file_encoding="utf-8",
         extra="ignore",
     )
+    smtp_host: str = "smtp.gmail.com"
+    smtp_port: int = 587
+    smtp_user: str | None = None
+    smtp_password: SecretStr | None = None
+    smtp_from_email: str | None = None
+    smtp_from_name: str = "ThinkHive"
 
     app_name: str = "ThinkHive API"
     app_version: str = "1.0.0"
@@ -41,17 +46,24 @@ class Settings(BaseSettings):
     google_api_key: SecretStr | None = None
 
     max_upload_size_mb: int = 25
-    allowed_upload_extensions: list[str] = [".pdf", ".docx", ".txt"]
+    allowed_upload_extensions: list[str] = [
+        ".pdf", ".docx", ".txt", ".png", ".jpg", ".jpeg",
+        ".mp3", ".wav", ".m4a", ".webm", ".ogg", ".flac", ".mp4", ".mpeg", ".mpga",
+    ]
 
     redis_url: str = "redis://localhost:6379/0"
     log_level: str = "INFO"
 
-    smtp_host: str = Field(default="smtp.gmail.com", validation_alias="SMTP_HOST")
-    smtp_port: int = Field(default=587, validation_alias="SMTP_PORT")
-    smtp_user: str | None = Field(default=None, validation_alias="SMTP_USER")
-    smtp_password: str | None = Field(default=None, validation_alias="SMTP_PASSWORD")
-    smtp_from_email: str | None = Field(default=None, validation_alias="SMTP_FROM_EMAIL")
-    smtp_from_name: str = Field(default="ThinkHive", validation_alias="SMTP_FROM_NAME")
+    # Predictive insights / age tagging: a document's age is judged relative
+    # to how long the company has been using ThinkHive, not a fixed day count.
+    # position = doc_age / org_lifetime, both measured from "now".
+    #   <= age_new_threshold      -> new
+    #   <= age_recent_threshold   -> recent
+    #   <= age_old_threshold      -> old
+    #   above that                -> outdated
+    age_new_threshold: float = 0.15
+    age_recent_threshold: float = 0.40
+    age_old_threshold: float = 0.75
 
     @property
     def cors_origins(self) -> list[str]:

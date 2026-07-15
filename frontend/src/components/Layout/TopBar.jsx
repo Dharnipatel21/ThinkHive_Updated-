@@ -1,51 +1,56 @@
-import { useLocation } from "react-router-dom";
-import { Bell, Search } from "lucide-react";
+import { useLocation, Link } from "react-router-dom";
+import { Menu, Moon, Sun } from "lucide-react";
 import { useAuthStore } from "../../store/useAuthStore";
-import ThemeToggle from "./ThemeToggle";
+import { useTheme } from "../../context/ThemeContext";
+import { useSidebar } from "./SidebarContext";
 
 const LABELS = {
-  dashboard: "Overview",
-  chat: "AI Assistant",
-  documents: "Documents",
-  search: "Search",
-  domains: "Domains",
-  hr: "HR",
-  "knowledge-map": "Knowledge Map",
-  admin: "Admin",
+  dashboard: "Overview", chat: "AI Assistant", documents: "Documents",
+  search: "Search", domains: "Domains", hr: "HR", "knowledge-map": "Knowledge Map",
+  admin: "Admin", analytics: "Analytics", reports: "Reports", settings: "Settings",
 };
 
-export default function TopBar() {
-  const { user } = useAuthStore();
+export default function Topbar() {
   const location = useLocation();
+  const { user } = useAuthStore();
+  const { isDark, toggleTheme } = useTheme();
+  const { toggle } = useSidebar();
   const segment = location.pathname.split("/").filter(Boolean)[0] || "dashboard";
-  const label = LABELS[segment] || "Dashboard";
-  const initials = (user?.full_name || "Alex Kim")
-    .split(" ")
-    .map((w) => w[0])
-    .join("")
-    .slice(0, 2)
-    .toUpperCase();
+  const label = LABELS[segment] || segment;
 
   return (
-    <header className="flex min-h-[68px] items-center justify-between border-b border-border bg-card/90 px-5 py-3 pl-16 backdrop-blur md:px-7 md:pl-7">
-      <div className="flex items-center gap-2 text-sm md:text-base">
-        <span className="text-muted-foreground">Dashboard</span>
-        <span className="text-muted-foreground">›</span>
-        <span className="font-semibold text-foreground">{label}</span>
-      </div>
-      <div className="flex items-center gap-3">
-        <div className="hidden w-44 items-center gap-2 rounded-lg border border-border bg-background px-3 py-2 text-sm text-muted-foreground shadow-sm sm:flex lg:w-56">
-          <Search size={15} />
-          <span className="flex-1">Search...</span>
-          <kbd className="rounded bg-card px-1.5 py-0.5 font-mono text-xs opacity-70">⌘K</kbd>
-        </div>
-        <button className="relative rounded-lg p-2 text-muted-foreground transition hover:bg-muted hover:text-foreground" aria-label="Notifications">
-          <Bell size={18} />
-          <span className="absolute right-1 top-1 h-2 w-2 rounded-full bg-destructive" />
+    <header className="flex items-center justify-between gap-3 border-b border-border bg-base px-4 py-3 sm:px-6 sm:py-4 lg:px-8">
+      <div className="flex min-w-0 items-center gap-3">
+        <button
+          type="button"
+          onClick={toggle}
+          className="flex h-9 w-9 flex-shrink-0 items-center justify-center rounded-lg border border-border text-rose-muted hover:bg-white/5 hover:text-cream transition-colors md:hidden"
+          aria-label="Open menu"
+        >
+          <Menu size={20} />
         </button>
-        <ThemeToggle />
-        <div className="flex h-10 w-10 items-center justify-center rounded-full bg-primary text-sm font-bold text-primary-foreground">
-          {initials}
+        <div className="flex min-w-0 items-center gap-2 text-sm">
+          <Link to="/dashboard" className="hidden truncate text-rose-muted hover:text-cream transition-colors sm:inline">
+            Dashboard
+          </Link>
+          <span className="hidden text-rose-muted sm:inline">›</span>
+          <span className="truncate font-medium text-cream">{label}</span>
+        </div>
+      </div>
+
+      <div className="flex flex-shrink-0 items-center gap-3 sm:gap-4">
+        <button
+          onClick={toggleTheme}
+          className="flex h-6 w-11 items-center rounded-full bg-surface-hover px-0.5 transition-colors"
+          aria-label="Toggle theme"
+        >
+          <div className={`flex h-5 w-5 items-center justify-center rounded-full bg-gold transition-transform ${isDark ? "translate-x-0" : "translate-x-5"}`}>
+            {isDark ? <Moon size={11} className="text-base-deep" /> : <Sun size={11} className="text-base-deep" />}
+          </div>
+        </button>
+
+        <div className="flex h-8 w-8 items-center justify-center rounded-full bg-gold text-xs font-bold text-base-deep">
+          {(user?.full_name || "U").split(" ").map(n => n[0]).slice(0, 2).join("")}
         </div>
       </div>
     </header>

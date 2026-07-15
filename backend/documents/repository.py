@@ -38,3 +38,9 @@ class DocumentRepository(TenantRepository):
             query = {**base, "$or": or_clauses}
         cursor = self.collection.find(query).sort("created_at", -1).limit(200)
         return await cursor.to_list(length=200)
+
+    async def get_org_created_at(self, org_id: str):
+        """When the company started using ThinkHive — the reference point age_tag is judged against."""
+        from bson import ObjectId
+        org = await self._db["organizations"].find_one({"_id": ObjectId(org_id)})
+        return org.get("created_at") if org else None

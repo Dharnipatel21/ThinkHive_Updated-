@@ -1,4 +1,5 @@
 from fastapi import APIRouter, Depends, HTTPException, status
+from fastapi.responses import Response
 from api.dependencies.check_permissions import require_permission
 from api.dependencies.get_database import DatabaseDependency
 from core.context import TenantContext
@@ -39,3 +40,17 @@ async def delete_document(
     if not deleted:
         raise HTTPException(status.HTTP_404_NOT_FOUND, "Document not found")
     return {"deleted": True, "document_id": doc_id}
+
+@router.get("/{doc_id}/download")
+async def download_document(
+    doc_id: str,
+    context: TenantContext = Depends(require_permission("documents:read")),
+    service: DocumentService = Depends(get_service),
+) -> Response:
+    content, filename, content_type = await service.download_document(context, doc_id)
+    safe_filename = filename.replace('"', "")
+    return Response(
+        content=content,
+        media_type=content_type,
+        headers={"Content-Disposition": f'attachment; filename="{safe_filename}"'},
+    )

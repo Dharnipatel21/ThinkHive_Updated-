@@ -6,7 +6,9 @@ from auth.service import AuthService
 from api.dependencies.get_current_user import get_current_user
 from api.dependencies.get_database import DatabaseDependency
 from core.context import TenantContext
-
+from pydantic import BaseModel, Field
+from auth.models import LoginRequest, RegisterRequest, TokenResponse, UserRead
+from core.security import hash_password, verify_password
 router = APIRouter(prefix="/auth", tags=["auth"])
 
 
@@ -101,3 +103,25 @@ async def me(db: DatabaseDependency, context: TenantContext = Depends(get_curren
         full_name=user["full_name"], role=user["role"], permissions=user.get("permissions", []),
         is_active=user.get("is_active", True),
     )
+class ChangePasswordRequest(BaseModel):
+    current_password: str
+    new_password: str = Field(min_length=8)
+
+
+@router.post("/change-password")
+async def change_password(
+    request: ChangePasswordRequest,
+    db: DatabaseDependency,
+    context: TenantContext = Depends(get_current_user),
+) -> dict:
+    user = await db["users"].find_one({"_id": ObjectId(context.user_id)})
+    if not user:
+        raise HTTPException(status.HTTP_404_NOT_FOUND, "User not found")
+    if not verify_password(request.current_password, user["hashed_password"]):
+        raise HTTPException(status.HTTP_401_UNAUTHORIZED, "Current password is incorrect")
+
+    await db["users"].update_one(
+        {"_id": ObjectId(context.user_id)},
+        {"$set": {"hashed_password": hash_password(request.new_password)}},
+    )
+    return {"message": "Password updated"}

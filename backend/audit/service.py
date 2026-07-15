@@ -11,6 +11,7 @@ class AuditService:
         try:
             await self.repo.log(context.org_id, {
                 "user_id": context.user_id,
+                "domain_id": context.domain_id,
                 "query": query,
                 "answer": response.get("answer", ""),
                 "confidence": response.get("confidence", 0),

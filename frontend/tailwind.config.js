@@ -1,16 +1,3 @@
-/** @type {import('tailwindcss').Config} */
-
-// Our CSS variables (in index.css) store full hex values, e.g. --primary: #ABA361;
-// Tailwind's usual `<alpha-value>` trick needs raw "R G B" channel strings instead,
-// which would mean rewriting every variable. Since modern browsers support
-// color-mix(), we build an opacity-aware color helper that works directly
-// with hex custom properties, so classes like `border-primary/60` keep working.
-//
-// IMPORTANT: Tailwind calls this function for EVERY color utility, even ones
-// without a /opacity modifier (e.g. plain `bg-card`) — in that case it passes
-// a non-numeric placeholder for opacityValue (for its bg-opacity-*/text-opacity-*
-// utilities), not `undefined`. We must only do the color-mix math when
-// opacityValue is an actual finite number; otherwise fall back to the plain var.
 function withOpacity(variableName) {
   return ({ opacityValue }) => {
     if (opacityValue !== undefined && !Number.isNaN(Number(opacityValue))) {
@@ -21,38 +8,58 @@ function withOpacity(variableName) {
 }
 
 export default {
-  darkMode: 'class',
-  content: [
-    "./index.html",
-    "./src/**/*.{js,jsx}",
-  ],
+  content: ["./index.html", "./src/**/*.{js,jsx,ts,tsx}"],
+  darkMode: "class",
   theme: {
     extend: {
       colors: {
-        background: withOpacity('--background'),
-        foreground: withOpacity('--foreground'),
-        card: { DEFAULT: withOpacity('--card'), foreground: withOpacity('--card-foreground') },
-        primary: { DEFAULT: withOpacity('--primary'), foreground: withOpacity('--primary-foreground') },
-        secondary: { DEFAULT: withOpacity('--secondary'), foreground: withOpacity('--secondary-foreground') },
-        muted: { DEFAULT: withOpacity('--muted'), foreground: withOpacity('--muted-foreground') },
-        accent: { DEFAULT: withOpacity('--accent'), foreground: withOpacity('--accent-foreground') },
-        destructive: { DEFAULT: withOpacity('--destructive'), foreground: withOpacity('--destructive-foreground') },
-        border: withOpacity('--border'),
+        base: withOpacity('--color-base'),
+        "base-deep": withOpacity('--color-base-deep'),
+        surface: withOpacity('--color-surface'),
+        "surface-hover": withOpacity('--color-surface-hover'),
+        border: withOpacity('--color-border'),
+        cream: withOpacity('--color-cream'),
+        "rose-muted": withOpacity('--color-rose-muted'),
+        gold: withOpacity('--color-gold'),
+        "gold-dark": withOpacity('--color-gold-dark'),
+        "gold-light": withOpacity('--color-gold-light'),
+        success: withOpacity('--color-success'),
+        danger: withOpacity('--color-danger'),
+        warn: withOpacity('--color-warn'),
+        sage: withOpacity('--color-sage'),
+
+        // Additive only — your friend's extra names, backed by new variables
+        // that default to match your existing palette. Nothing currently in
+        // the app uses these, so nothing breaks; they're just available now.
+        primary: { DEFAULT: withOpacity('--color-primary'), foreground: withOpacity('--color-primary-foreground') },
+        secondary: { DEFAULT: withOpacity('--color-secondary'), foreground: withOpacity('--color-secondary-foreground') },
+        muted: { DEFAULT: withOpacity('--color-muted'), foreground: withOpacity('--color-muted-foreground') },
+        accent: { DEFAULT: withOpacity('--color-accent'), foreground: withOpacity('--color-accent-foreground') },
+        destructive: { DEFAULT: withOpacity('--color-destructive'), foreground: withOpacity('--color-destructive-foreground') },
         sidebar: {
-          DEFAULT: withOpacity('--sidebar'),
-          foreground: withOpacity('--sidebar-foreground'),
-          border: withOpacity('--sidebar-border'),
-          active: withOpacity('--sidebar-active'),
-          'active-foreground': withOpacity('--sidebar-active-foreground'),
+          DEFAULT: withOpacity('--color-sidebar'),
+          foreground: withOpacity('--color-sidebar-foreground'),
+          border: withOpacity('--color-sidebar-border'),
+          active: withOpacity('--color-sidebar-active'),
+          "active-foreground": withOpacity('--color-sidebar-active-foreground'),
         },
       },
       fontFamily: {
-        display: ["'Fraunces'", 'Georgia', 'serif'],
-        body: ["'Manrope'", 'system-ui', 'sans-serif'],
-        mono: ["'JetBrains Mono'", 'monospace'],
+        display: ["'Playfair Display'", "serif"],
+        sans: ["'Inter'", "-apple-system", "sans-serif"],
+        mono: ["'JetBrains Mono'", "monospace"],
       },
-      borderRadius: { lg: 'var(--radius)' },
+      animation: {
+        "fade-in-up": "fadeInUp 0.5s ease-out forwards",
+        "fade-in": "fadeIn 0.4s ease-out forwards",
+        blink: "blink 1s step-end infinite",
+      },
+      keyframes: {
+        fadeInUp: { "0%": { opacity: 0, transform: "translateY(12px)" }, "100%": { opacity: 1, transform: "translateY(0)" } },
+        fadeIn: { "0%": { opacity: 0 }, "100%": { opacity: 1 } },
+        blink: { "0%, 100%": { opacity: 1 }, "50%": { opacity: 0 } },
+      },
     },
   },
   plugins: [],
-}
+};

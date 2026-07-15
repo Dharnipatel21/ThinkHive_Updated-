@@ -28,3 +28,10 @@ pdf2image==1.17.0
 Pillow==10.4.0
 httpx==0.27.2
 email-validator==2.3.0
+
+# YouTube link ingestion — captions fetch (fast path) + audio-download fallback.
+# yt-dlp tracks YouTube's site changes closely; pin loosely and expect to bump
+# it occasionally. FFmpegExtractAudio needs ffmpeg installed on the server
+# (same requirement as the existing voice-query feature).
+youtube-transcript-api>=0.6.2
+yt-dlp>=2026.6.9

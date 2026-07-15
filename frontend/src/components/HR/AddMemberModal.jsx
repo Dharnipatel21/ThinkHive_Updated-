@@ -1,3 +1,215 @@
+/*
+import { useState } from "react";
+import { X } from "lucide-react";
+import { addMember } from "../../services/api";
+import toast from "react-hot-toast";
+
+const ROLES = ["employee","manager","guest"];
+
+export default function AddMemberModal({ onClose, onSuccess }) {
+  const [form, setForm] = useState({ email: "", full_name: "", role: "employee" });
+  const [loading, setLoading] = useState(false);
+
+  async function handleSubmit(e) {
+    e.preventDefault();
+    if (!form.email || !form.full_name) return;
+    setLoading(true);
+    try {
+      await addMember(form);
+      toast.success(`${form.full_name} added successfully`);
+      onSuccess?.();
+      onClose();
+    } catch (e) { toast.error(e?.response?.data?.detail || "Failed to add member"); }
+    setLoading(false);
+  }
+
+  return (
+    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm px-4">
+      <div className="w-full max-w-md rounded-2xl border border-[#1C2540] bg-[#131929] p-6 shadow-2xl">
+        <div className="flex items-center justify-between mb-5">
+          <h2 className="text-lg font-semibold text-white">Add Member</h2>
+          <button onClick={onClose} className="rounded-lg p-1.5 text-white/40 hover:bg-white/5"><X size={16} /></button>
+        </div>
+        <form onSubmit={handleSubmit} className="space-y-4">
+          {[{name:"full_name",label:"Full Name",placeholder:"Jane Smith"},{name:"email",label:"Work Email",placeholder:"jane@company.com",type:"email"}].map(({name,label,placeholder,type="text"})=>(
+            <div key={name}>
+              <label className="mb-1 block text-sm text-white/70">{label}</label>
+              <input type={type} value={form[name]} onChange={e=>setForm(p=>({...p,[name]:e.target.value}))} placeholder={placeholder}
+                className="w-full rounded-lg border border-[#1C2540] bg-[#0B0F1A] px-4 py-2.5 text-white placeholder:text-white/30 focus:border-[#4F8EF7] focus:outline-none" />
+            </div>
+          ))}
+          <div>
+            <label className="mb-1 block text-sm text-white/70">Role</label>
+            <select value={form.role} onChange={e=>setForm(p=>({...p,role:e.target.value}))}
+              className="w-full rounded-lg border border-[#1C2540] bg-[#0B0F1A] px-4 py-2.5 text-white capitalize focus:border-[#4F8EF7] focus:outline-none">
+              {ROLES.map(r=><option key={r} value={r}>{r}</option>)}
+            </select>
+          </div>
+          <p className="text-xs text-white/30">Default password: TempPass@123 — member must reset on first login</p>
+          <div className="flex gap-3 pt-1">
+            <button type="button" onClick={onClose} className="flex-1 rounded-lg border border-white/10 py-2.5 text-sm text-white/60 hover:bg-white/5">Cancel</button>
+            <button type="submit" disabled={loading||!form.email||!form.full_name}
+              className="flex-1 rounded-lg bg-[#4F8EF7] py-2.5 text-sm font-semibold text-white hover:bg-[#4F8EF7]/90 disabled:opacity-50">
+              {loading?"Adding...":"Add Member"}
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
+  );
+}
+*/
+/*
+import { useEffect, useState } from "react";
+import { X } from "lucide-react";
+import { addMember, getDomains } from "../../services/api";
+import toast from "react-hot-toast";
+
+const ROLES = ["employee","manager","guest"];
+
+export default function AddMemberModal({ onClose, onSuccess }) {
+  const [form, setForm] = useState({ email: "", full_name: "", role: "employee", domain_id: "" });
+  const [domains, setDomains] = useState([]);
+  const [loading, setLoading] = useState(false);
+
+  useEffect(() => {
+    getDomains().then(setDomains).catch(() => setDomains([]));
+  }, []);
+
+  async function handleSubmit(e) {
+    e.preventDefault();
+    if (!form.email || !form.full_name) return;
+    setLoading(true);
+    try {
+      await addMember({ ...form, domain_id: form.domain_id || null });
+      toast.success(`${form.full_name} added successfully`);
+      onSuccess?.();
+      onClose();
+    } catch (e) { toast.error(e?.response?.data?.detail || "Failed to add member"); }
+    setLoading(false);
+  }
+
+  return (
+    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm px-4">
+      <div className="w-full max-w-md rounded-2xl border border-[#1C2540] bg-[#131929] p-6 shadow-2xl">
+        <div className="flex items-center justify-between mb-5">
+          <h2 className="text-lg font-semibold text-white">Add Member</h2>
+          <button onClick={onClose} className="rounded-lg p-1.5 text-white/40 hover:bg-white/5"><X size={16} /></button>
+        </div>
+        <form onSubmit={handleSubmit} className="space-y-4">
+          {[{name:"full_name",label:"Full Name",placeholder:"Jane Smith"},{name:"email",label:"Work Email",placeholder:"jane@company.com",type:"email"}].map(({name,label,placeholder,type="text"})=>(
+            <div key={name}>
+              <label className="mb-1 block text-sm text-white/70">{label}</label>
+              <input type={type} value={form[name]} onChange={e=>setForm(p=>({...p,[name]:e.target.value}))} placeholder={placeholder}
+                className="w-full rounded-lg border border-[#1C2540] bg-[#0B0F1A] px-4 py-2.5 text-white placeholder:text-white/30 focus:border-[#4F8EF7] focus:outline-none" />
+            </div>
+          ))}
+          <div>
+            <label className="mb-1 block text-sm text-white/70">Role</label>
+            <select value={form.role} onChange={e=>setForm(p=>({...p,role:e.target.value}))}
+              className="w-full rounded-lg border border-[#1C2540] bg-[#0B0F1A] px-4 py-2.5 text-white capitalize focus:border-[#4F8EF7] focus:outline-none">
+              {ROLES.map(r=><option key={r} value={r}>{r}</option>)}
+            </select>
+          </div>
+          <div>
+            <label className="mb-1 block text-sm text-white/70">Domain</label>
+            <select value={form.domain_id} onChange={e=>setForm(p=>({...p,domain_id:e.target.value}))}
+              className="w-full rounded-lg border border-[#1C2540] bg-[#0B0F1A] px-4 py-2.5 text-white focus:border-[#4F8EF7] focus:outline-none">
+              <option value="">No domain</option>
+              {domains.map(d=><option key={d.id} value={d.id}>{d.name}</option>)}
+            </select>
+          </div>
+          <p className="text-xs text-white/30">Default password: TempPass@123 — member must reset on first login</p>
+          <div className="flex gap-3 pt-1">
+            <button type="button" onClick={onClose} className="flex-1 rounded-lg border border-white/10 py-2.5 text-sm text-white/60 hover:bg-white/5">Cancel</button>
+            <button type="submit" disabled={loading||!form.email||!form.full_name}
+              className="flex-1 rounded-lg bg-[#4F8EF7] py-2.5 text-sm font-semibold text-white hover:bg-[#4F8EF7]/90 disabled:opacity-50">
+              {loading?"Adding...":"Add Member"}
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
+  );
+}
+
+*/
+/*
+import { useEffect, useState } from "react";
+import { X } from "lucide-react";
+import { addMember, getDomains } from "../../services/api";
+import toast from "react-hot-toast";
+
+const ROLES = ["employee","manager","guest"];
+
+export default function AddMemberModal({ onClose, onSuccess }) {
+  const [form, setForm] = useState({ email: "", full_name: "", role: "employee", domain_id: "" });
+  const [domains, setDomains] = useState([]);
+  const [loading, setLoading] = useState(false);
+
+  useEffect(() => {
+    getDomains().then(setDomains).catch(() => setDomains([]));
+  }, []);
+
+  async function handleSubmit(e) {
+    e.preventDefault();
+    if (!form.email || !form.full_name) return;
+    setLoading(true);
+    try {
+      await addMember({ ...form, domain_id: form.domain_id || null });
+      toast.success(`${form.full_name} added successfully`);
+      onSuccess?.();
+      onClose();
+    } catch (e) { toast.error(e?.response?.data?.detail || "Failed to add member"); }
+    setLoading(false);
+  }
+
+  return (
+    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm px-4">
+      <div className="w-full max-w-md rounded-2xl border border-[#1C2540] bg-[#131929] p-6 shadow-2xl">
+        <div className="flex items-center justify-between mb-5">
+          <h2 className="text-lg font-semibold text-white">Add Member</h2>
+          <button onClick={onClose} className="rounded-lg p-1.5 text-white/40 hover:bg-white/5"><X size={16} /></button>
+        </div>
+        <form onSubmit={handleSubmit} className="space-y-4">
+          {[{name:"full_name",label:"Full Name",placeholder:"Jane Smith"},{name:"email",label:"Work Email",placeholder:"jane@company.com",type:"email"}].map(({name,label,placeholder,type="text"})=>(
+            <div key={name}>
+              <label className="mb-1 block text-sm text-white/70">{label}</label>
+              <input type={type} value={form[name]} onChange={e=>setForm(p=>({...p,[name]:e.target.value}))} placeholder={placeholder}
+                className="w-full rounded-lg border border-[#1C2540] bg-[#0B0F1A] px-4 py-2.5 text-white placeholder:text-white/30 focus:border-[#4F8EF7] focus:outline-none" />
+            </div>
+          ))}
+          <div>
+            <label className="mb-1 block text-sm text-white/70">Role</label>
+            <select value={form.role} onChange={e=>setForm(p=>({...p,role:e.target.value}))}
+              className="w-full rounded-lg border border-[#1C2540] bg-[#0B0F1A] px-4 py-2.5 text-white capitalize focus:border-[#4F8EF7] focus:outline-none">
+              {ROLES.map(r=><option key={r} value={r}>{r}</option>)}
+            </select>
+          </div>
+          <div>
+            <label className="mb-1 block text-sm text-white/70">Domain</label>
+            <select value={form.domain_id} onChange={e=>setForm(p=>({...p,domain_id:e.target.value}))}
+              className="w-full rounded-lg border border-[#1C2540] bg-[#0B0F1A] px-4 py-2.5 text-white focus:border-[#4F8EF7] focus:outline-none">
+              <option value="">No domain</option>
+              {domains.map(d=><option key={d.id} value={d.id}>{d.name}</option>)}
+            </select>
+          </div>
+          <p className="text-xs text-white/30">An email with a setup code will be sent to this address</p>
+          <div className="flex gap-3 pt-1">
+            <button type="button" onClick={onClose} className="flex-1 rounded-lg border border-white/10 py-2.5 text-sm text-white/60 hover:bg-white/5">Cancel</button>
+            <button type="submit" disabled={loading||!form.email||!form.full_name}
+              className="flex-1 rounded-lg bg-[#4F8EF7] py-2.5 text-sm font-semibold text-white hover:bg-[#4F8EF7]/90 disabled:opacity-50">
+              {loading?"Adding...":"Add Member"}
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
+  );
+}
+*/
+
+/*
 import { useEffect, useState } from "react";
 import { X } from "lucide-react";
 import { addMember, getDomains } from "../../services/api";
@@ -23,46 +235,206 @@ export default function AddMemberModal({ onClose, onSuccess }) {
       toast.success(`${form.full_name} added successfully`);
       onSuccess?.();
       onClose();
-    } catch (e) {
-      toast.error(e?.response?.data?.detail || "Failed to add member");
-    }
+    } catch (e) { toast.error(e?.response?.data?.detail || "Failed to add member"); }
     setLoading(false);
   }
 
+  const inputClass = "w-full rounded-lg border border-border bg-base px-4 py-2.5 text-cream placeholder:text-rose-muted/50 focus:border-gold focus:outline-none transition-colors";
+
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-foreground/35 px-4 backdrop-blur-sm">
-      <div className="th-card w-full max-w-md p-6 shadow-2xl">
-        <div className="mb-5 flex items-center justify-between">
-          <h2 className="font-display text-xl text-foreground">Add Member</h2>
-          <button onClick={onClose} className="rounded-lg p-1.5 text-muted-foreground hover:bg-muted hover:text-foreground"><X size={16} /></button>
+    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm px-4">
+      <div className="w-full max-w-md rounded-2xl border border-border bg-surface p-6 shadow-2xl animate-fade-in">
+        <div className="flex items-center justify-between mb-5">
+          <h2 className="font-display text-lg font-semibold text-cream">Add Member</h2>
+          <button onClick={onClose} className="rounded-lg p-1.5 text-rose-muted hover:bg-white/5 hover:text-cream transition-colors">
+            <X size={16} />
+          </button>
         </div>
         <form onSubmit={handleSubmit} className="space-y-4">
-          {[
-            { name: "full_name", label: "Full Name", placeholder: "Jane Smith" },
-            { name: "email", label: "Work Email", placeholder: "jane@company.com", type: "email" },
-          ].map(({ name, label, placeholder, type = "text" }) => (
+          {[{ name: "full_name", label: "Full Name", placeholder: "Jane Smith" }, { name: "email", label: "Work Email", placeholder: "jane@company.com", type: "email" }].map(({ name, label, placeholder, type = "text" }) => (
             <div key={name}>
-              <label className="mb-1 block text-sm text-foreground/70">{label}</label>
-              <input type={type} value={form[name]} onChange={(e) => setForm((p) => ({ ...p, [name]: e.target.value }))} placeholder={placeholder} className="th-input" />
+              <label className="mb-1 block text-sm text-rose-muted">{label}</label>
+              <input
+                type={type}
+                value={form[name]}
+                onChange={e => setForm(p => ({ ...p, [name]: e.target.value }))}
+                placeholder={placeholder}
+                className={inputClass}
+              />
             </div>
           ))}
           <div>
-            <label className="mb-1 block text-sm text-foreground/70">Role</label>
-            <select value={form.role} onChange={(e) => setForm((p) => ({ ...p, role: e.target.value }))} className="th-input capitalize">
-              {ROLES.map((r) => <option key={r} value={r}>{r}</option>)}
+            <label className="mb-1 block text-sm text-rose-muted">Role</label>
+            <select
+              value={form.role}
+              onChange={e => setForm(p => ({ ...p, role: e.target.value }))}
+              className={`${inputClass} capitalize`}
+            >
+              {ROLES.map(r => <option key={r} value={r}>{r}</option>)}
             </select>
           </div>
           <div>
-            <label className="mb-1 block text-sm text-foreground/70">Domain</label>
-            <select value={form.domain_id} onChange={(e) => setForm((p) => ({ ...p, domain_id: e.target.value }))} className="th-input">
+            <label className="mb-1 block text-sm text-rose-muted">Domain</label>
+            <select
+              value={form.domain_id}
+              onChange={e => setForm(p => ({ ...p, domain_id: e.target.value }))}
+              className={inputClass}
+            >
               <option value="">No domain</option>
-              {domains.map((d) => <option key={d.id} value={d.id}>{d.name}</option>)}
+              {domains.map(d => <option key={d.id} value={d.id}>{d.name}</option>)}
             </select>
           </div>
-          <p className="text-xs text-muted-foreground">An email with a setup code will be sent to this address.</p>
+          <p className="text-xs text-rose-muted/60">An email with a setup code will be sent to this address</p>
           <div className="flex gap-3 pt-1">
-            <button type="button" onClick={onClose} className="th-button-secondary flex-1">Cancel</button>
-            <button type="submit" disabled={loading || !form.email || !form.full_name} className="th-button flex-1">
+            <button type="button" onClick={onClose} className="flex-1 rounded-lg border border-border py-2.5 text-sm text-rose-muted hover:bg-white/5 transition-colors">
+              Cancel
+            </button>
+            <button
+              type="submit"
+              disabled={loading || !form.email || !form.full_name}
+              className="flex-1 rounded-lg bg-gold py-2.5 text-sm font-semibold text-base-deep hover:bg-gold-light disabled:opacity-50 transition-colors"
+            >
+              {loading ? "Adding..." : "Add Member"}
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
+  );
+}
+*/
+
+import { useEffect, useState } from "react";
+import { X } from "lucide-react";
+import { addMember, getDomains, getPermissionsMatrix } from "../../services/api";
+import toast from "react-hot-toast";
+
+const ROLES = ["employee", "manager", "guest", "custom"];
+
+export default function AddMemberModal({ onClose, onSuccess }) {
+  const [form, setForm] = useState({ email: "", full_name: "", role: "employee", domain_id: "" });
+  const [domains, setDomains] = useState([]);
+  const [matrix, setMatrix] = useState([]);
+  const [customPermissions, setCustomPermissions] = useState(new Set());
+  const [loading, setLoading] = useState(false);
+
+  useEffect(() => {
+    getDomains().then(setDomains).catch(() => setDomains([]));
+    getPermissionsMatrix().then((m) => setMatrix(m.roles || [])).catch(() => setMatrix([]));
+  }, []);
+
+  // Every permission string that exists anywhere in the real backend matrix
+  // (excluding the org-super-admin wildcard), used for the custom checklist.
+  const allPermissions = Array.from(
+    new Set(matrix.filter((r) => r.role !== "org_super_admin").flatMap((r) => r.permissions))
+  ).sort();
+
+  const togglePermission = (perm) => {
+    setCustomPermissions((prev) => {
+      const next = new Set(prev);
+      next.has(perm) ? next.delete(perm) : next.add(perm);
+      return next;
+    });
+  };
+
+  async function handleSubmit(e) {
+    e.preventDefault();
+    if (!form.email || !form.full_name) return;
+    setLoading(true);
+    try {
+      await addMember({
+        ...form,
+        domain_id: form.domain_id || null,
+        // Only meaningful for role === "custom" — the backend ignores this
+        // for built-in roles and recomputes permissions from the role itself.
+        permissions: form.role === "custom" ? Array.from(customPermissions) : undefined,
+      });
+      toast.success(`${form.full_name} added successfully`);
+      onSuccess?.();
+      onClose();
+    } catch (e) { toast.error(e?.response?.data?.detail || "Failed to add member"); }
+    setLoading(false);
+  }
+
+  const inputClass = "w-full rounded-lg border border-border bg-base px-4 py-2.5 text-cream placeholder:text-rose-muted/50 focus:border-gold focus:outline-none transition-colors";
+
+  return (
+    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm px-4">
+      <div className="w-full max-w-md rounded-2xl border border-border bg-surface p-6 shadow-2xl animate-fade-in max-h-[90vh] overflow-y-auto">
+        <div className="flex items-center justify-between mb-5">
+          <h2 className="font-display text-lg font-semibold text-cream">Add Member</h2>
+          <button onClick={onClose} className="rounded-lg p-1.5 text-rose-muted hover:bg-white/5 hover:text-cream transition-colors">
+            <X size={16} />
+          </button>
+        </div>
+        <form onSubmit={handleSubmit} className="space-y-4">
+          {[{ name: "full_name", label: "Full Name", placeholder: "Jane Smith" }, { name: "email", label: "Work Email", placeholder: "jane@company.com", type: "email" }].map(({ name, label, placeholder, type = "text" }) => (
+            <div key={name}>
+              <label className="mb-1 block text-sm text-rose-muted">{label}</label>
+              <input
+                type={type}
+                value={form[name]}
+                onChange={e => setForm(p => ({ ...p, [name]: e.target.value }))}
+                placeholder={placeholder}
+                className={inputClass}
+              />
+            </div>
+          ))}
+          <div>
+            <label className="mb-1 block text-sm text-rose-muted">Role</label>
+            <select
+              value={form.role}
+              onChange={e => setForm(p => ({ ...p, role: e.target.value }))}
+              className={`${inputClass} capitalize`}
+            >
+              {ROLES.map(r => <option key={r} value={r}>{r}</option>)}
+            </select>
+          </div>
+
+          {form.role === "custom" && (
+            <div>
+              <label className="mb-1 block text-sm text-rose-muted">Permissions</label>
+              <div className="max-h-40 overflow-y-auto rounded-lg border border-border bg-base p-3 space-y-1.5">
+                {allPermissions.length === 0 ? (
+                  <p className="text-xs text-rose-muted/60">Loading permissions...</p>
+                ) : (
+                  allPermissions.map((perm) => (
+                    <label key={perm} className="flex items-center gap-2 text-sm text-cream cursor-pointer">
+                      <input
+                        type="checkbox"
+                        checked={customPermissions.has(perm)}
+                        onChange={() => togglePermission(perm)}
+                        className="accent-gold"
+                      />
+                      {perm}
+                    </label>
+                  ))
+                )}
+              </div>
+            </div>
+          )}
+
+          <div>
+            <label className="mb-1 block text-sm text-rose-muted">Domain</label>
+            <select
+              value={form.domain_id}
+              onChange={e => setForm(p => ({ ...p, domain_id: e.target.value }))}
+              className={inputClass}
+            >
+              <option value="">No domain</option>
+              {domains.map(d => <option key={d.id} value={d.id}>{d.name}</option>)}
+            </select>
+          </div>
+          <p className="text-xs text-rose-muted/60">An email with a setup code will be sent to this address</p>
+          <div className="flex gap-3 pt-1">
+            <button type="button" onClick={onClose} className="flex-1 rounded-lg border border-border py-2.5 text-sm text-rose-muted hover:bg-white/5 transition-colors">
+              Cancel
+            </button>
+            <button
+              type="submit"
+              disabled={loading || !form.email || !form.full_name}
+              className="flex-1 rounded-lg bg-gold py-2.5 text-sm font-semibold text-base-deep hover:bg-gold-light disabled:opacity-50 transition-colors"
+            >
               {loading ? "Adding..." : "Add Member"}
             </button>
           </div>

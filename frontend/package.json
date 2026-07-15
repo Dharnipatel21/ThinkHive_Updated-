@@ -20,7 +20,12 @@
     "react-hot-toast": "^2.4.1",
     "lucide-react": "^0.383.0",
     "react-dropzone": "^14.2.3",
-    "papaparse": "^5.4.1"
+    "papaparse": "^5.4.1",
+    "recharts": "^2.12.7",
+    "react-markdown": "^9.0.1",
+    "remark-gfm": "^4.0.0",
+    "jspdf": "^4.2.1",
+    "html2canvas": "^1.4.1"
   },
   "devDependencies": {
     "@vitejs/plugin-react": "^4.3.1",

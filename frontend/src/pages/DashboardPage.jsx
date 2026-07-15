@@ -1,28 +1,16 @@
-import { useEffect, useState } from "react";
-import { Bot, Brain, ChevronRight, FileText, Globe2, TrendingUp, Upload, Users } from "lucide-react";
-import { Link } from "react-router-dom";
+/*import { useEffect, useState } from "react";
+import { FileText, MessageSquare, Users, FolderOpen, TrendingUp, AlertCircle, RefreshCw } from "lucide-react";
 import { getDashboardMetrics, getKnowledgeGaps, getPredictiveInsights } from "../services/api";
 import { useAuthStore } from "../store/useAuthStore";
 
-const fallbackActivity = [
-  ["Sarah Chen added to Engineering team", "2m ago", Users],
-  ["thinkhive.io domain renewed for 2 years", "15m ago", Globe2],
-  ["Employee Handbook v4.2 uploaded", "1h ago", FileText],
-  ["Security knowledge gap flagged - 35% coverage", "3h ago", Brain],
-  ["Q2 compliance audit completed", "Yesterday", TrendingUp],
-];
-
-function MetricCard({ icon: Icon, label, value, delta }) {
+function MetricCard({ icon: Icon, label, value, color = "text-[#4F8EF7]" }) {
   return (
-    <div className="th-card p-5">
+    <div className="rounded-2xl border border-white/10 bg-[#131929] p-5">
       <div className="flex items-center justify-between">
-        <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-primary/14 text-primary">
-          <Icon size={19} />
-        </div>
-        {delta && <span className="text-sm font-bold text-secondary-foreground">{delta}</span>}
+        <p className="text-sm text-white/50">{label}</p>
+        <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-[#4F8EF7]/10"><Icon size={17} className={color}/></div>
       </div>
-      <p className="mt-5 font-display text-3xl text-foreground">{value ?? "0"}</p>
-      <p className="mt-1 text-sm text-muted-foreground">{label}</p>
+      <p className="mt-3 text-3xl font-bold text-white">{value ?? "—"}</p>
     </div>
   );
 }
@@ -32,84 +20,205 @@ export default function DashboardPage() {
   const [metrics, setMetrics] = useState(null);
   const [gaps, setGaps] = useState([]);
   const [insights, setInsights] = useState([]);
+  const [loading, setLoading] = useState(true);
 
-  useEffect(() => {
-    async function load() {
-      try {
-        const [m, g, ins] = await Promise.all([getDashboardMetrics(), getKnowledgeGaps(), getPredictiveInsights()]);
-        setMetrics(m);
-        setGaps(g || []);
-        setInsights(ins || []);
-      } catch {
-        setMetrics(null);
-      }
-    }
-    load();
-  }, []);
-
-  const firstName = user?.full_name?.split(" ")[0] || "Alex";
-  const coverage = metrics?.avg_confidence ? `${Math.round(metrics.avg_confidence * 100)}%` : "68%";
+  async function load() {
+    setLoading(true);
+    try {
+      const [m, g, ins] = await Promise.all([getDashboardMetrics(), getKnowledgeGaps(), getPredictiveInsights()]);
+      setMetrics(m); setGaps(g); setInsights(ins);
+    } catch {} finally { setLoading(false); }
+  }
+  useEffect(() => { load(); }, []);
 
   return (
-    <div className="th-page space-y-7">
-      <section>
-        <h1 className="font-display text-3xl text-foreground">Good morning, {firstName}</h1>
-        <p className="mt-1 text-muted-foreground">Thursday, July 3, 2026 · Everything looks healthy</p>
-      </section>
-
-      <section className="grid gap-4 md:grid-cols-2 xl:grid-cols-4">
-        <MetricCard icon={Users} label="Total Employees" value={metrics?.total_members || 148} delta="+12" />
-        <MetricCard icon={Globe2} label="Active Domains" value={metrics?.total_domains || 32} delta="+2" />
-        <MetricCard icon={FileText} label="Documents" value={metrics?.total_documents || "1,284"} delta="+47" />
-        <MetricCard icon={Brain} label="Knowledge Coverage" value={coverage} delta="+5%" />
-      </section>
-
-      <section className="grid gap-5 xl:grid-cols-[1fr_420px]">
-        <div className="th-card p-6">
-          <div className="mb-5 flex items-center justify-between">
-            <h2 className="font-display text-2xl">Recent Activity</h2>
-            <button className="text-sm font-semibold text-primary">View all</button>
-          </div>
-          <div className="divide-y divide-border">
-            {fallbackActivity.map(([text, time, Icon]) => (
-              <div key={text} className="flex items-center gap-4 py-4">
-                <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-primary/12 text-primary">
-                  <Icon size={17} />
-                </div>
-                <p className="flex-1 text-foreground/88">{text}</p>
-                <span className="font-mono text-sm text-muted-foreground">{time}</span>
-              </div>
-            ))}
-          </div>
+    <div className="p-6 max-w-5xl mx-auto space-y-8">
+      <div className="flex items-center justify-between">
+        <div>
+          <h1 className="text-2xl font-bold text-white">Dashboard</h1>
+          <p className="mt-1 text-white/50">Welcome back, {user?.full_name?.split(" ")[0] || "there"}</p>
         </div>
+        <button onClick={load} disabled={loading} className="flex items-center gap-2 rounded-xl border border-white/10 px-4 py-2 text-sm text-white/50 hover:bg-white/5 transition">
+          <RefreshCw size={14} className={loading?"animate-spin":""}/> Refresh
+        </button>
+      </div>
 
-        <div className="th-card p-6">
-          <h2 className="font-display mb-5 text-2xl">Quick Actions</h2>
-          {[
-            ["/hr", "Add employee", Users],
-            ["/domains", "Register domain", Globe2],
-            ["/documents", "Upload document", Upload],
-            ["/chat", "Ask AI Assistant", Bot],
-            ["/knowledge-map", "View knowledge map", Brain],
-          ].map(([to, label, Icon]) => (
-            <Link key={label} to={to} className="flex items-center gap-4 rounded-lg px-2 py-4 text-foreground/88 hover:bg-muted/35">
-              <div className="flex h-9 w-9 items-center justify-center rounded-full bg-primary/12 text-primary">
-                <Icon size={17} />
+      <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+        <MetricCard icon={FileText} label="Total Documents" value={metrics?.total_documents} />
+        <MetricCard icon={FileText} label="Indexed" value={metrics?.indexed_documents} color="text-emerald-400" />
+        <MetricCard icon={MessageSquare} label="Total Queries" value={metrics?.total_queries} color="text-[#2DD4A7]" />
+        <MetricCard icon={TrendingUp} label="Avg Confidence" value={metrics?.avg_confidence ? `${Math.round(metrics.avg_confidence*100)}%` : "—"} color="text-amber-400" />
+        <MetricCard icon={Users} label="Members" value={metrics?.total_members} color="text-purple-400" />
+        <MetricCard icon={FolderOpen} label="Domains" value={metrics?.total_domains} color="text-pink-400" />
+      </div>
+
+      <div className="grid gap-6 lg:grid-cols-2">
+        <div className="rounded-2xl border border-white/10 bg-[#131929] p-5">
+          <h2 className="text-base font-semibold text-white mb-4">Knowledge Gaps</h2>
+          {gaps.length === 0 ? (
+            <p className="text-sm text-white/40 py-4 text-center">No knowledge gaps detected yet</p>
+          ) : gaps.map((g,i) => (
+            <div key={i} className="flex items-start gap-3 rounded-lg border border-white/5 bg-[#0B0F1A] px-3 py-2.5 mb-2">
+              <AlertCircle size={14} className="text-amber-400 mt-0.5 flex-shrink-0" />
+              <div>
+                <p className="text-sm text-white/80">{g.query}</p>
+                <p className="text-xs text-white/40">Confidence: {Math.round((g.confidence||0)*100)}%</p>
               </div>
-              <span className="flex-1 font-semibold">{label}</span>
-              <ChevronRight size={16} className="text-muted-foreground" />
-            </Link>
+            </div>
           ))}
         </div>
-      </section>
-
-      {(gaps.length > 0 || insights.length > 0) && (
-        <section className="grid gap-5 lg:grid-cols-2">
-          {[...gaps.slice(0, 3).map((g) => g.query), ...insights.slice(0, 3).map((i) => i.message)].map((item) => (
-            <div key={item} className="th-card p-4 text-sm text-muted-foreground">{item}</div>
+        <div className="rounded-2xl border border-white/10 bg-[#131929] p-5">
+          <h2 className="text-base font-semibold text-white mb-4">Predictive Insights</h2>
+          {insights.length === 0 ? (
+            <p className="text-sm text-white/40 py-4 text-center">All documents are fresh and up to date</p>
+          ) : insights.map((ins,i) => (
+            <div key={i} className="flex items-start gap-3 rounded-lg border border-white/5 bg-[#0B0F1A] px-3 py-2.5 mb-2">
+              <AlertCircle size={14} className="text-orange-400 mt-0.5 flex-shrink-0" />
+              <p className="text-sm text-white/70">{ins.message}</p>
+            </div>
           ))}
-        </section>
-      )}
+        </div>
+      </div>
     </div>
   );
+}
+*/
+
+
+import { useEffect, useState } from "react";
+import { FileText, MessageSquare, Users, FolderOpen, TrendingUp, AlertCircle, RefreshCw, Sparkles } from "lucide-react";
+import { getDashboardMetrics, getKnowledgeGaps, getPredictiveInsights } from "../services/api";
+import { useAuthStore } from "../store/useAuthStore";
+import AnimatedCounter from "../components/common/AnimatedCounter";
+
+function MetricCard({ icon: Icon, label, value, delta, i }) {
+  const numeric = typeof value === "number";
+  return (
+    <div
+      className="stagger-item rounded-2xl border border-border bg-surface p-5"
+      style={{ animationDelay: `${i * 80}ms` }}
+    >
+      <div className="flex items-center justify-between">
+        <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-gold/15">
+          <Icon size={17} className="text-gold" />
+        </div>
+        {delta && <span className="text-xs text-success">{delta}</span>}
+      </div>
+      <p className="mt-3 font-display text-2xl font-bold text-cream sm:text-3xl">
+        {value == null ? "—" : numeric ? <AnimatedCounter value={value} /> : value}
+      </p>
+      <p className="mt-1 text-sm text-rose-muted">{label}</p>
+    </div>
+  );
+}
+
+export default function DashboardPage() {
+  const { user } = useAuthStore();
+  const [metrics, setMetrics] = useState(null);
+  const [gaps, setGaps] = useState([]);
+  const [insights, setInsights] = useState([]);
+  const [loading, setLoading] = useState(true);
+
+  async function load() {
+    setLoading(true);
+    try {
+      const [m, g, ins] = await Promise.all([getDashboardMetrics(), getKnowledgeGaps(), getPredictiveInsights()]);
+      setMetrics(m); setGaps(g); setInsights(ins);
+    } catch {} finally { setLoading(false); }
+  }
+  useEffect(() => { load(); }, []);
+
+  const today = new Date().toLocaleDateString("en-US", { weekday: "long", year: "numeric", month: "long", day: "numeric" });
+
+  return (
+    <div className="mx-auto max-w-6xl space-y-6 sm:space-y-8">
+      <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
+        <div>
+          <h1 className="font-display text-2xl font-bold text-cream sm:text-3xl">
+            Good {getGreeting()}, {user?.full_name?.split(" ")[0] || "there"}
+          </h1>
+          <p className="mt-1 text-rose-muted">{today} · Everything looks healthy</p>
+        </div>
+        <button
+          onClick={load}
+          disabled={loading}
+          className="flex items-center gap-2 rounded-xl border border-border px-4 py-2 text-sm text-rose-muted hover:bg-white/5 transition-colors"
+        >
+          <RefreshCw size={14} className={loading ? "animate-spin" : ""} /> Refresh
+        </button>
+      </div>
+
+      <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
+        <MetricCard i={0} icon={Users} label="Total Members" value={metrics?.total_members} />
+        <MetricCard i={1} icon={FolderOpen} label="Active Domains" value={metrics?.total_domains} />
+        <MetricCard i={2} icon={FileText} label="Documents" value={metrics?.total_documents} />
+        <MetricCard
+          i={3}
+          icon={TrendingUp}
+          label="Avg Confidence"
+          value={metrics?.avg_confidence != null ? Math.round(metrics.avg_confidence * 100) : null}
+          delta={metrics?.avg_confidence != null ? "" : undefined}
+        />
+      </div>
+
+      <div className="grid grid-cols-1 gap-6 lg:grid-cols-2">
+        {/* Knowledge Gaps — your real data, styled as the "Recent Activity" panel */}
+        <div className="rounded-2xl border border-border bg-surface p-4 sm:p-6">
+          <div className="flex items-center justify-between mb-4">
+            <h2 className="font-display text-lg font-semibold text-cream">Knowledge Gaps</h2>
+          </div>
+          {gaps.length === 0 ? (
+            <p className="text-sm text-rose-muted py-6 text-center">No knowledge gaps detected yet</p>
+          ) : (
+            <div className="space-y-1">
+              {gaps.map((g, i) => (
+                <div
+                  key={i}
+                  className="stagger-item flex items-start gap-3 rounded-lg px-2 py-3 border-b border-border last:border-0"
+                  style={{ animationDelay: `${i * 60}ms` }}
+                >
+                  <AlertCircle size={15} className="text-warn mt-0.5 flex-shrink-0" />
+                  <div className="min-w-0 flex-1">
+                    <p className="text-sm text-cream truncate">{g.query}</p>
+                    <p className="text-xs text-rose-muted mt-0.5">Confidence: {Math.round((g.confidence || 0) * 100)}%</p>
+                  </div>
+                </div>
+              ))}
+            </div>
+          )}
+        </div>
+
+        {/* Predictive Insights — styled as the "Quick Actions" panel */}
+        <div className="rounded-2xl border border-border bg-surface p-4 sm:p-6">
+          <div className="flex items-center justify-between mb-4">
+            <h2 className="font-display text-lg font-semibold text-cream">Predictive Insights</h2>
+            <Sparkles size={16} className="text-gold" />
+          </div>
+          {insights.length === 0 ? (
+            <p className="text-sm text-rose-muted py-6 text-center">All documents are fresh and up to date</p>
+          ) : (
+            <div className="space-y-1">
+              {insights.map((ins, i) => (
+                <div
+                  key={i}
+                  className="stagger-item flex items-start gap-3 rounded-lg px-2 py-3 border-b border-border last:border-0"
+                  style={{ animationDelay: `${i * 60}ms` }}
+                >
+                  <MessageSquare size={15} className="text-gold mt-0.5 flex-shrink-0" />
+                  <p className="text-sm text-rose-muted">{ins.message}</p>
+                </div>
+              ))}
+            </div>
+          )}
+        </div>
+      </div>
+    </div>
+  );
+}
+
+function getGreeting() {
+  const h = new Date().getHours();
+  if (h < 12) return "morning";
+  if (h < 18) return "afternoon";
+  return "evening";
 }

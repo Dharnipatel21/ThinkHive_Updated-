@@ -4,6 +4,8 @@ from pydantic import BaseModel, Field
 class QueryRequest(BaseModel):
     query: str = Field(min_length=1, max_length=4000)
     limit: int = Field(default=8, ge=1, le=20)
+    language: str = Field(default="en")
+    conversation_id: str | None = None  # None = start a new conversation
 
 
 class Citation(BaseModel):
@@ -21,3 +23,4 @@ class QueryResponse(BaseModel):
     confidence_label: str
     contradiction_flag: bool
     citations: list[Citation]
+    conversation_id: str = ""
